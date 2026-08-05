@@ -1,8 +1,8 @@
-# 🌾 FarmFresh — Hyper-Local Farm Produce Marketplace
+# 🌾 FarmFresh — Local Farm Produce Marketplace
 
 ✨ *Connecting Local Farmers Directly with Households for Organic, Zero-Middleman Produce*
 
-FarmFresh is a **full-stack, multi-role e-commerce web platform** designed to bridge the gap between local farmers and customers. It features hyper-local distance-based produce discovery, 6-digit delivery pin verification, Razorpay online payments & COD, a 7.5% platform revenue fee model, and dedicated role-based dashboards for Customers, Farmers, and System Administrators.
+FarmFresh is a **full-stack, multi-role e-commerce web platform** designed to bridge the gap between local farmers and customers. It features hyper-local distance-based produce discovery, 6-digit delivery pin verification, Razorpay online payments & COD, and dedicated role-based dashboards for Customers, Farmers, and System Administrators.
 
 🌐 **GitHub Repository:** [https://github.com/bhanuteja7781/Farm_Fresh](https://github.com/bhanuteja7781/Farm_Fresh)  
 ☁️ **Deployment:** AWS EC2 Instance (`13.50.239.148`) | Docker Containerized (Nginx + PHP-FPM + MySQL)
