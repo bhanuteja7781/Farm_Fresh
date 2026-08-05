@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors', 0);
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 $host = getenv('DB_HOST') ?: 'farmfresh-db';
 $db_name = getenv('DB_DATABASE') ?: (getenv('DB_NAME') ?: 'farmfresh');
 $username = getenv('DB_USERNAME') ?: (getenv('DB_USER') ?: 'root');

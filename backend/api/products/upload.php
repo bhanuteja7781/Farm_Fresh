@@ -71,8 +71,9 @@ $newFilename = 'prod_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . strtolo
 
 $uploadDir = __DIR__ . '/../../uploads/';
 if (!is_dir($uploadDir)) {
-    mkdir($uploadDir, 0755, true);
+    @mkdir($uploadDir, 0777, true);
 }
+@chmod($uploadDir, 0777);
 
 $targetFilePath = $uploadDir . $newFilename;
 
