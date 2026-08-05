@@ -322,7 +322,7 @@
               const itemStatus = item.item_status || order.status;
               const statusText = itemStatus.replace(/_/g, ' ');
 
-              if (itemStatus === 'out_for_delivery' || itemStatus === 'confirmed') {
+              if (itemStatus !== 'delivered') {
                 showDeliveryCodeBox = true;
               }
 
