@@ -963,10 +963,32 @@
             container.appendChild(card);
           });
         } else {
-          container.innerHTML = "<p style='grid-column: 1 / -1; text-align:center; padding:30px; color:#666;'>No farm produce currently available within your delivery radius.</p>";
+          container.innerHTML = `
+            <div style="grid-column: 1 / -1; max-width: 500px; margin: 40px auto; text-align: center; background: #ffffff; padding: 40px 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #e9ecef;">
+              <div style="width: 64px; height: 64px; background: #e8f5e9; color: #28a745; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 20px;">
+                <i class="fas fa-wheat-awn"></i>
+              </div>
+              <h3 style="color: #2c3e50; font-size: 20px; font-weight: 700; margin-bottom: 8px;">No Nearby Farms Found</h3>
+              <p style="color: #6c757d; font-size: 14px; line-height: 1.6; margin-bottom: 24px;">There is currently no fresh produce listed within your 50km delivery radius. Local farmers in your area haven't added listings yet.</p>
+              <a href="/register" style="display: inline-block; background: #28a745; color: white; padding: 12px 24px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 14px; transition: all 0.2s;">
+                <i class="fas fa-plus-circle" style="margin-right: 6px;"></i>Register as a Farmer
+              </a>
+            </div>
+          `;
         }
       } catch {
-        container.innerHTML = "<p style='grid-column: 1 / -1; text-align:center; padding:30px; color:#dc3545;'>Failed to load products.</p>";
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1; max-width: 500px; margin: 40px auto; text-align: center; background: #ffffff; padding: 40px 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #e9ecef;">
+            <div style="width: 64px; height: 64px; background: #e8f5e9; color: #28a745; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 20px;">
+              <i class="fas fa-wheat-awn"></i>
+            </div>
+            <h3 style="color: #2c3e50; font-size: 20px; font-weight: 700; margin-bottom: 8px;">No Nearby Farms Found</h3>
+            <p style="color: #6c757d; font-size: 14px; line-height: 1.6; margin-bottom: 24px;">There is currently no fresh produce listed within your 50km delivery radius. Local farmers in your area haven't added listings yet.</p>
+            <a href="/register" style="display: inline-block; background: #28a745; color: white; padding: 12px 24px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 14px; transition: all 0.2s;">
+              <i class="fas fa-plus-circle" style="margin-right: 6px;"></i>Register as a Farmer
+            </a>
+          </div>
+        `;
       }
     }
 
