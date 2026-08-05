@@ -1,9 +1,8 @@
 .git
 .gitignore
-README.md
-README-docker.md
+node_modules
+frontend/node_modules
 *.pem
 *.key
-farmfresh.pem
-.vscode
-.idea
+.DS_Store
+Thumbs.db

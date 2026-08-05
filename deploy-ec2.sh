@@ -1,28 +1,6 @@
 #!/bin/bash
-set -e
-
-sudo apt-get update
-sudo apt-get install -y ca-certificates curl gnupg lsb-release
-sudo install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-sudo chmod a+r /etc/apt/keyrings/docker.gpg
-
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-sudo apt-get update
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-sudo systemctl enable docker
-sudo systemctl start docker
-sudo usermod -aG docker ubuntu
-
-mkdir -p /home/ubuntu/farmfresh
-cd /home/ubuntu/farmfresh
-if [ ! -d .git ]; then
-  git clone https://github.com/your-username/farmfresh.git .
-fi
-
-cp .env.example .env
-sudo docker compose up --build -d
+echo "Deploying FarmFresh to AWS EC2..."
+git pull origin main
+docker-compose down
+docker-compose up -d --build
+echo "Deployment Complete!"

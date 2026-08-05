@@ -1,55 +1,40 @@
+version: '3.8'
+
 services:
-  db:
-    image: mysql:8.0
-    container_name: farmfresh-db
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: farmfresh
-      MYSQL_USER: farmfresh
-      MYSQL_PASSWORD: farmfreshpass
+  web:
+    image: nginx:alpine
+    container_name: farmfresh-web
     ports:
-      - "3306:3306"
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpassword"]
-      interval: 10s
-      timeout: 5s
-      retries: 12
-      start_period: 20s
+      - "80:80"
     volumes:
-      - db-data:/var/lib/mysql
-      - ./database.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./frontend/public:/usr/share/nginx/html
+      - ./backend:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+      - db
 
   php:
     build:
       context: .
       dockerfile: Dockerfile.php
     container_name: farmfresh-php
-    restart: unless-stopped
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      DB_HOST: db
-      DB_DATABASE: farmfresh
-      DB_USERNAME: farmfresh
-      DB_PASSWORD: farmfreshpass
     volumes:
       - ./backend:/var/www/html
-    ports:
-      - "8080:80"
-
-  web:
-    image: nginx:latest
-    container_name: farmfresh-web
-    restart: unless-stopped
     depends_on:
-      - php
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: farmfresh-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: farmfresh
     ports:
-      - "80:80"
+      - "3306:3306"
     volumes:
-      - ./frontend/public:/usr/share/nginx/html:ro
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./database.sql:/docker-entrypoint-initdb.d/database.sql
+      - db_data:/var/lib/mysql
 
 volumes:
-  db-data:
+  db_data:
