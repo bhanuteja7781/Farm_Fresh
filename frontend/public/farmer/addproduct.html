@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Add Product - FarmFresh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Basic Reset & Font */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+      padding-top: 80px;
+    }
+
+    /* Consistent Navbar */
+    .navbar {
+      background-color: #28a745;
+      color: white;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+    }
+
+    .navbar h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0;
+      line-height: 1;
+      color: white;
+    }
+
+    .navbar .brand-logo-link {
+      color: white;
+      text-decoration: none;
+    }
+
+    .navbar .brand-logo-link:hover {
+      opacity: 0.95;
+      text-decoration: none;
+    }
+
+    .navbar div {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      white-space: nowrap;
+      transition: opacity 0.2s ease;
+    }
+
+    .navbar a:hover {
+      opacity: 0.85;
+    }
+
+    /* Form Container Styling */
+    .form-container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Form Heading */
+    .form-container h2 {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: #343a40;
+      margin-bottom: 30px;
+    }
+
+    /* Consistent Input/Textarea Styling */
+    .form-container input[type="text"],
+    .form-container input[type="number"],
+    .form-container textarea {
+      display: block;
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 20px;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-container textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .form-container input:focus,
+    .form-container textarea:focus {
+      outline: none;
+      border-color: #28a745;
+      box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+    }
+
+    /* Image Upload Dropzone */
+    .upload-zone {
+      border: 2px dashed #28a745;
+      border-radius: 8px;
+      padding: 25px;
+      text-align: center;
+      background: #fdfdfd;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: background 0.3s;
+    }
+    .upload-zone:hover { background: #f1f9f3; }
+    .upload-zone i { font-size: 32px; color: #28a745; margin-bottom: 8px; }
+    .upload-zone p { font-size: 14px; color: #555; }
+    .upload-zone span { color: #28a745; font-weight: bold; }
+    .upload-zone input[type="file"] { display: none; }
+
+    .preview-container {
+      margin-bottom: 20px;
+      display: none;
+      text-align: center;
+    }
+    .preview-container img {
+      max-height: 200px;
+      max-width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    .form-container button[type="submit"] {
+      display: block;
+      width: 100%;
+      background-color: #28a745;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      margin-top: 10px;
+    }
+
+    .form-container button[type="submit"]:hover {
+      background-color: #218838;
+      transform: scale(1.01);
+    }
+
+    .toast {
+      visibility: hidden;
+      min-width: 280px;
+      background-color: #3c83e6;
+      color: white;
+      text-align: center;
+      border-radius: 8px;
+      padding: 15px 20px;
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      font-weight: 600;
+      font-size: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      opacity: 0;
+      transition: opacity 0.5s, bottom 0.5s, visibility 0.5s ease;
+    }
+
+    .toast.show {
+      visibility: visible;
+      opacity: 1;
+      bottom: 40px;
+    }
+
+    .toast.error {
+      background-color: #dc3545;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <a href="/farmer/dashboard" class="brand-logo-link"><h1>FarmFresh</h1></a>
+    <div>
+      <a href="/farmer/dashboard">Dashboard</a>
+      <a href="/addproduct">Add Product</a>
+      <a href="/farmer/orders">Orders</a>
+      <a href="/farmer/myproducts">My Products</a>
+      <a href="/profile">Profile</a>
+    </div>
+  </div>
+
+  <div class="form-container">
+    <h2>Enter Product Details</h2>
+    <form id="addProductForm">
+      <input type="text" id="name" name="name" placeholder="Product Name (e.g., Organic Apples)" required />
+      <textarea id="description" name="description" placeholder="Detailed Description (e.g., Freshly picked, juicy, grown without pesticides...)" rows="4" required></textarea>
+      <input type="number" id="price" name="price" placeholder="Price per unit (₹)" step="0.01" min="0" required />
+      <input type="number" id="quantity" name="quantity" placeholder="Available Stock Quantity" min="0" required />
+      
+      <!-- Upload File Dropzone -->
+      <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <p>Click to Upload Product Image, or <span>Browse File</span></p>
+        <input type="file" id="fileInput" accept="image/*" onchange="previewImage(event)" />
+      </div>
+
+      <div class="preview-container" id="previewBox">
+        <img id="imgPreview" src="" alt="Product Preview" />
+      </div>
+
+      <button type="submit" id="submitButton">Add Product</button>
+    </form>
+  </div>
+
+  <div id="toast" class="toast">Message goes here</div>
+
+  <script>
+    function logout() {
+      document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      window.location.href = "/login";
+    }
+    const token = document.cookie.match(/(^| )token=([^;]+)/)?.[2];
+    if (!token) {
+      alert("Access denied. Please log in as a farmer to add products.");
+      window.location.href = "/login";
+    }
+
+    const toastElement = document.getElementById("toast");
+    let toastTimeout;
+    let selectedFile = null;
+
+    function showToast(message, isError = false) {
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastElement.textContent = message;
+      toastElement.className = `toast show ${isError ? 'error' : ''}`;
+      toastTimeout = setTimeout(() => {
+        toastElement.className = toastElement.className.replace(" show", "");
+        toastTimeout = null;
+      }, 3000);
+    }
+
+    function previewImage(event) {
+      const file = event.target.files[0];
+      if (file) {
+        selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById("imgPreview").src = e.target.result;
+          document.getElementById("previewBox").style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    document.getElementById("addProductForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const submitButton = document.getElementById('submitButton');
+      submitButton.disabled = true;
+      submitButton.textContent = 'Uploading & Saving...';
+
+      const name = document.getElementById("name").value.trim();
+      const description = document.getElementById("description").value.trim();
+      const price = document.getElementById("price").value;
+      const quantity = document.getElementById("quantity").value;
+
+      try {
+        let imageUrl = "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500&auto=format&fit=crop";
+
+        if (selectedFile) {
+          const formData = new FormData();
+          formData.append("token", token);
+          formData.append("image", selectedFile);
+
+          const uploadRes = await fetch("/api/products/upload", {
+            method: "POST",
+            body: formData
+          });
+
+          const uploadData = await uploadRes.json();
+          if (uploadData.status === "success") {
+            imageUrl = uploadData.image_url;
+          } else {
+            throw new Error(uploadData.message || "Failed to upload image");
+          }
+        }
+
+        const res = await fetch("/api/products/add", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, name, description, price, quantity, image_url: imageUrl })
+        });
+
+        const data = await res.json();
+        if (data.status === "success") {
+          showToast("Product added successfully!");
+          setTimeout(() => window.location.href = "/farmer/myproducts", 1000);
+        } else {
+          showToast(data.message || "Failed to add product", true);
+        }
+      } catch (err) {
+        showToast(err.message || "An error occurred", true);
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Add Product';
+      }
+    });
+  </script>
+</body>
+</html>

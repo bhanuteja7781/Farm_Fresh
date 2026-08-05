@@ -1,0 +1,9 @@
+.git
+.gitignore
+README.md
+README-docker.md
+*.pem
+*.key
+farmfresh.pem
+.vscode
+.idea

@@ -1,0 +1,26 @@
+# Environment Variables
+.env
+*.env
+
+# Credentials & Keys
+*.pem
+*.key
+farmfresh.pem
+
+# Dependencies
+/vendor/
+/node_modules/
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor Settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker Logs
+*.log

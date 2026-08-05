@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard - FarmFresh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      min-height: 100vh;
+      background-color: #f0f4f0;
+      color: #333;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 240px;
+      background: #28a745;
+      color: white;
+      padding: 28px 0;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; bottom: 0; left: 0;
+      box-shadow: 4px 0 15px rgba(0,0,0,0.12);
+      z-index: 50;
+    }
+
+    .sidebar-brand {
+      padding: 0 24px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      margin-bottom: 16px;
+    }
+
+    .sidebar-brand h2 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .admin-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255,255,255,0.18);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    .sidebar nav {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 0 12px;
+      flex: 1;
+    }
+
+    .sidebar nav a {
+      color: rgba(255,255,255,0.9);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 11px 14px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .sidebar nav a:hover,
+    .sidebar nav a.active {
+      background: rgba(255,255,255,0.18);
+      color: white;
+    }
+
+    .sidebar nav a i {
+      width: 18px;
+      font-size: 14px;
+    }
+
+    /* MAIN */
+    .main {
+      margin-left: 240px;
+      flex: 1;
+      padding: 30px;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .topbar-left h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #28a745;
+    }
+
+    .topbar-left p {
+      font-size: 13px;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    .btn-logout {
+      background: white;
+      color: #dc3545;
+      border: 1.5px solid #dc3545;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover {
+      background: #dc3545;
+      color: white;
+    }
+
+    /* STATS GRID */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 14px;
+      padding: 24px 22px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      border-left: 4px solid #28a745;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.09);
+    }
+
+    .stat-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .stat-icon.green  { background: #e8f5e9; color: #28a745; }
+    .stat-icon.blue   { background: #e8f5e9; color: #28a745; }
+    .stat-icon.orange { background: #e8f5e9; color: #28a745; }
+    .stat-icon.purple { background: #e8f5e9; color: #28a745; }
+
+    .stat-info h4 {
+      font-size: 11px;
+      color: #999;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+    }
+
+    .stat-info .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: #28a745;
+      line-height: 1.15;
+      margin-top: 4px;
+    }
+
+    .stat-sub {
+      font-size: 11px;
+      color: #aaa;
+      margin-top: 3px;
+    }
+
+    @media (max-width: 900px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding: 20px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-brand">
+      <a href="/admin/dashboard" style="color: inherit; text-decoration: none;"><h2>FarmFresh</h2></a>
+      <div class="admin-badge"><i class="fas fa-shield-halved"></i> Admin Panel</div>
+    </div>
+    <nav>
+      <a href="/admin/dashboard" class="active"><i class="fas fa-chart-pie"></i> Dashboard</a>
+      <a href="/admin/users"><i class="fas fa-users"></i> Users</a>
+      <a href="/admin/products"><i class="fas fa-box-open"></i> Products</a>
+      <a href="/admin/orders"><i class="fas fa-receipt"></i> Orders</a>
+    </nav>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <h1>Admin Dashboard</h1>
+        <p>Welcome back, Administrator</p>
+      </div>
+      <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+
+    <!-- Unified 3x3 Dashboard Grid -->
+    <div class="stats-grid">
+
+      <!-- Row 1 -->
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-user"></i></div>
+        <div class="stat-info">
+          <h4>Registered Customers</h4>
+          <div class="stat-value" id="totalCustomers">--</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-wheat-awn"></i></div>
+        <div class="stat-info">
+          <h4>Registered Farmers</h4>
+          <div class="stat-value" id="totalFarmers">--</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-chart-line"></i></div>
+        <div class="stat-info">
+          <h4>Gross Sales</h4>
+          <div class="stat-value" id="totalRevenue">--</div>
+        </div>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-box-open"></i></div>
+        <div class="stat-info">
+          <h4>Total Products</h4>
+          <div class="stat-value" id="totalProducts">--</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-receipt"></i></div>
+        <div class="stat-info">
+          <h4>Total Orders</h4>
+          <div class="stat-value" id="totalOrders">--</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-clock"></i></div>
+        <div class="stat-info">
+          <h4>Pending Orders</h4>
+          <div class="stat-value" id="pendingOrdersHighlight">--</div>
+          <div class="stat-sub">Awaiting processing</div>
+        </div>
+      </div>
+
+      <!-- Row 3 -->
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-calendar-check"></i></div>
+        <div class="stat-info">
+          <h4>Monthly Gross</h4>
+          <div class="stat-value" id="monthlyRevenueHighlight">--</div>
+          <div class="stat-sub">Sales this month</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-indian-rupee-sign"></i></div>
+        <div class="stat-info">
+          <h4>Platform Revenue</h4>
+          <div class="stat-value" id="platformRevenueHighlight">--</div>
+          <div class="stat-sub">7.5% of gross sales</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-trophy"></i></div>
+        <div class="stat-info">
+          <h4>Top Product</h4>
+          <div class="stat-value" id="topProductHighlight" style="font-size:16px; line-height:1.4;">--</div>
+          <div class="stat-sub">Most ordered item</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const token = document.cookie.match(/(^| )token=([^;]+)/)?.[2];
+    if (!token) { alert("Access denied."); window.location.href = "/login"; }
+
+    function logout() {
+      document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      window.location.href = "/login";
+    }
+
+    async function loadAdminDashboard() {
+      try {
+        const res = await fetch("/api/dashboard/adminsummary", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token })
+        });
+        const data = await res.json();
+        if (data.status === "success" && data.data) {
+          const { total_customers, total_farmers, total_products, total_orders, gross_sales, platform_revenue, pending_orders, monthly_revenue, top_products } = data.data;
+          document.getElementById("totalCustomers").textContent = total_customers;
+          document.getElementById("totalFarmers").textContent = total_farmers;
+          document.getElementById("totalProducts").textContent = total_products;
+          document.getElementById("totalOrders").textContent = total_orders;
+          document.getElementById("totalRevenue").textContent = "₹" + parseFloat(gross_sales).toFixed(2);
+          document.getElementById("pendingOrdersHighlight").textContent = pending_orders;
+          document.getElementById("monthlyRevenueHighlight").textContent = "₹" + parseFloat(monthly_revenue).toFixed(2);
+          document.getElementById("platformRevenueHighlight").textContent = "₹" + parseFloat(platform_revenue).toFixed(2);
+          document.getElementById("topProductHighlight").textContent = top_products?.length ? top_products[0].name + " (" + top_products[0].total_sold + " sold)" : "No data yet";
+        }
+      } catch (err) {
+        console.error("Dashboard fetch failed:", err);
+      }
+    }
+
+    loadAdminDashboard();
+  </script>
+</body>
+</html>

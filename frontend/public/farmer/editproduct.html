@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Product - FarmFresh</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Basic Reset & Font */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+      margin: 0;
+      padding-top: 80px;
+    }
+
+    /* Enhanced Navbar */
+    .navbar {
+      background-color: #28a745;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      box-sizing: border-box;
+    }
+
+    .navbar h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0;
+      line-height: 1;
+      color: white;
+    }
+
+    .navbar .brand-logo-link {
+      color: white;
+      text-decoration: none;
+    }
+
+    .navbar .brand-logo-link:hover {
+      opacity: 0.95;
+      text-decoration: none;
+    }
+
+    .navbar .nav-right {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      white-space: nowrap;
+      transition: opacity 0.2s ease;
+    }
+
+    .navbar a:hover {
+      opacity: 0.85;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      text-align: center;
+      color: #28a745;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+      font-family: inherit;
+    }
+
+    .upload-zone {
+      border: 2px dashed #28a745;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      background: #fdfdfd;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    .upload-zone p { font-size: 14px; color: #555; margin: 0; }
+    .upload-zone span { color: #28a745; font-weight: bold; }
+    .upload-zone input[type="file"] { display: none; }
+
+    .preview-container {
+      margin-bottom: 20px;
+      display: none;
+      text-align: center;
+    }
+    .preview-container img {
+      max-height: 180px;
+      max-width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    button {
+      background-color: #28a745;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .toast {
+      visibility: hidden;
+      background-color: #3c83e6;
+      color: white;
+      text-align: center;
+      border-radius: 6px;
+      padding: 12px;
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      font-weight: bold;
+    }
+
+    .toast.show {
+      visibility: visible;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="/farmer/dashboard" class="brand-logo-link"><h1>FarmFresh</h1></a>
+    <div class="nav-right" id="navbarRight">
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2>Edit Product</h2>
+    <form id="editForm">
+      <label for="name">Product Name</label>
+      <input type="text" id="name" required />
+
+      <label for="description">Description</label>
+      <textarea id="description" rows="4" required></textarea>
+
+      <label for="price">Price (₹)</label>
+      <input type="number" id="price" step="0.01" required />
+
+      <label for="quantity">Quantity</label>
+      <input type="number" id="quantity" required />
+
+      <label>Product Photo</label>
+      <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+        <p>Click to replace photo, or <span>Browse File</span></p>
+        <input type="file" id="fileInput" accept="image/*" onchange="previewImage(event)" />
+      </div>
+
+      <div class="preview-container" id="previewBox">
+        <img id="imgPreview" src="" alt="Preview" />
+      </div>
+      <input type="hidden" id="current_image_url" />
+
+      <button type="submit" id="submitBtn">Update Product</button>
+    </form>
+  </div>
+
+  <div class="toast" id="toast">Product updated successfully</div>
+
+  <script>
+    const token = document.cookie.match(/(^| )token=([^;]+)/)?.[2];
+    const productId = window.location.pathname.split("/").pop();
+    const navbarRight = document.getElementById("navbarRight");
+    const toastElement = document.getElementById("toast");
+    let selectedFile = null;
+
+    if (!token || !productId) {
+      alert("Unauthorized access or invalid product ID.");
+      window.location.href = "/login";
+    } else {
+      loadUser();
+    }
+
+    async function loadUser() {
+      try {
+        const res = await fetch("/api/getuser", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token })
+        });
+        const data = await res.json();
+        if (data.status === 'success' && data.user) {
+          const role = data.user.role;
+          if (role === 'farmer') {
+            navbarRight.innerHTML = `
+              <a href="/farmer/dashboard">Dashboard</a>
+              <a href="/addproduct">Add Product</a>
+              <a href="/farmer/orders">Orders</a>
+              <a href="/farmer/myproducts">My Products</a>
+              <a href="/profile">Profile</a>
+            `;
+          } else {
+            window.location.href = "/";
+          }
+        } else {
+          logout();
+        }
+      } catch {
+        logout();
+      }
+    }
+
+    function logout() {
+      document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      window.location.href = "/";
+    }
+
+    function showToast(message) {
+      toastElement.textContent = message;
+      toastElement.className = "toast show";
+      setTimeout(() => {
+        toastElement.className = toastElement.className.replace("show", "");
+        setTimeout(() => {
+          window.location.href = '/farmer/myproducts';
+        }, 400);
+      }, 1000);
+    }
+
+    function previewImage(event) {
+      const file = event.target.files[0];
+      if (file) {
+        selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById("imgPreview").src = e.target.result;
+          document.getElementById("previewBox").style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    async function loadProduct() {
+      try {
+        const res = await fetch("/api/products/getone", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, product_id: productId })
+        });
+        const data = await res.json();
+        if (data.status === "success" && data.data) {
+          const p = data.data;
+          document.getElementById("name").value = p.name || '';
+          document.getElementById("description").value = p.description || '';
+          document.getElementById("price").value = p.price || '';
+          document.getElementById("quantity").value = p.quantity || '';
+          document.getElementById("current_image_url").value = p.image_url || '';
+
+          if (p.image_url) {
+            let imgSrc = p.image_url;
+            if (!imgSrc.startsWith('http') && !imgSrc.startsWith('/')) imgSrc = '/' + imgSrc;
+            document.getElementById("imgPreview").src = imgSrc;
+            document.getElementById("previewBox").style.display = "block";
+          }
+        } else {
+          alert("Product not found.");
+          window.location.href = "/farmer/dashboard";
+        }
+      } catch (err) {
+        alert("Failed to load product details.");
+      }
+    }
+
+    document.getElementById("editForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Updating...";
+
+      try {
+        let imageUrl = document.getElementById("current_image_url").value;
+
+        if (selectedFile) {
+          const formData = new FormData();
+          formData.append("token", token);
+          formData.append("image", selectedFile);
+
+          const uploadRes = await fetch("/api/products/upload", {
+            method: "POST",
+            body: formData
+          });
+          const uploadData = await uploadRes.json();
+          if (uploadData.status === "success") {
+            imageUrl = uploadData.image_url;
+          } else {
+            throw new Error(uploadData.message || "Failed to upload image");
+          }
+        }
+
+        const res = await fetch("/api/products/update", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            token,
+            product_id: productId,
+            name: document.getElementById("name").value,
+            description: document.getElementById("description").value,
+            price: parseFloat(document.getElementById("price").value),
+            quantity: parseInt(document.getElementById("quantity").value),
+            image_url: imageUrl
+          })
+        });
+
+        const data = await res.json();
+        if (data.status === "success") {
+          showToast("Product updated successfully!");
+        } else {
+          alert("Failed to update product: " + data.message);
+        }
+      } catch (err) {
+        alert(err.message || "An error occurred while updating.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Update Product";
+      }
+    });
+
+    loadProduct();
+  </script>
+</body>
+</html>

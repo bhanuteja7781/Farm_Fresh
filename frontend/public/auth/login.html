@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FarmFresh - Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script>
+    (function checkIfLoggedIn() {
+      const match = document.cookie.match(new RegExp('(^| )token=([^;]+)'));
+      if (match) {
+        window.location.href = '/';
+      }
+    })();
+  </script>
+  <style>
+    /* Basic Reset & Font */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding-top: 80px;
+    }
+
+    .navbar {
+      background-color: #28a745;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      box-sizing: border-box;
+    }
+
+    .navbar h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0;
+      line-height: 1;
+      color: white;
+    }
+
+    .navbar .brand-logo-link {
+      color: white;
+      text-decoration: none;
+    }
+
+    .navbar .brand-logo-link:hover {
+      opacity: 0.95;
+      text-decoration: none;
+    }
+
+    .navbar .nav-right {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      white-space: nowrap;
+      transition: opacity 0.2s ease;
+    }
+
+    .navbar a:hover {
+      opacity: 0.85;
+    }
+
+    .login-box {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      width: clamp(300px, 40%, 400px);
+      margin-top: 40px;
+    }
+
+    .login-box h2 {
+      margin-bottom: 30px;
+      color: #28a745;
+      text-align: center;
+      font-weight: 700;
+      font-size: 24px;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    button {
+      width: 100%;
+      padding: 12px 15px;
+      margin-top: 15px;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #28a745;
+      box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+    }
+
+    button {
+      background: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      padding: 12px 20px;
+      border-radius: 8px;
+    }
+
+    button:hover {
+      background: #218838;
+      transform: scale(1.02);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #dc3545;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      visibility: hidden;
+      z-index: 9999;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+      text-align: center;
+      max-width: 90%;
+    }
+
+    .toast.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .toast.success {
+      background-color: #28a745;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <a href="/" class="brand-logo-link"><h1>FarmFresh</h1></a>
+    <div class="nav-right">
+      <a href="/">Home</a>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+    </div>
+  </nav>
+  <div class="login-box">
+    <h2>Login to FarmFresh</h2>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit" id="submitBtn">Login</button>
+    </form>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    function showToast(message, isSuccess = false) {
+      const toast = document.getElementById("toast");
+      toast.className = `toast show ${isSuccess ? 'success' : ''}`;
+      toast.textContent = message;
+
+      setTimeout(() => {
+        toast.className = toast.className.replace("show", "");
+      }, 4000);
+    }
+
+    document.getElementById('loginForm').onsubmit = async function (e) {
+      e.preventDefault();
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Logging in...";
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (data.status === 'success') {
+          document.cookie = `token=${data.token}; path=/;`;
+          showToast("Login successful! Redirecting...", true);
+
+          setTimeout(() => {
+            const role = data.user.role;
+            if (role === 'customer') {
+              window.location.href = '/';
+            } else if (role === 'farmer') {
+              window.location.href = '/farmer/dashboard';
+            } else if (role === 'admin') {
+              window.location.href = '/admin/dashboard';
+            } else {
+              window.location.href = '/';
+            }
+          }, 800);
+        } else {
+          showToast(data.message || "Invalid credentials.");
+        }
+      } catch (err) {
+        showToast("Login failed. Please check your connection.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Login";
+      }
+    };
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FarmFresh - Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+      padding-top: 80px;
+      color: #333;
+    }
+
+    .navbar {
+      background-color: #28a745;
+      color: white;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+    }
+
+    .navbar h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0;
+      line-height: 1;
+      color: white;
+    }
+
+    .navbar .brand-logo-link {
+      color: white;
+      text-decoration: none;
+    }
+
+    .navbar .brand-logo-link:hover {
+      opacity: 0.95;
+      text-decoration: none;
+    }
+
+    .navbar .nav-right {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      white-space: nowrap;
+      transition: opacity 0.2s ease;
+    }
+
+    .navbar a:hover {
+      opacity: 0.85;
+    }
+
+    .cart-icon {
+      position: relative;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -12px;
+      background-color: #dc3545;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 11px;
+      font-weight: bold;
+      display: none;
+    }
+
+    .greeting-search-container {
+      max-width: 1280px;
+      margin: 25px auto 15px;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .greeting-search-container h2 {
+      color: #28a745;
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    .search-box-wrapper {
+      position: relative;
+      width: 420px;
+      max-width: 100%;
+      display: none; /* Hidden until location is granted */
+    }
+
+    .search-box-wrapper .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #28a745;
+      font-size: 15px;
+      pointer-events: none;
+    }
+
+    .search-box-wrapper input {
+      width: 100%;
+      padding: 10px 16px 10px 42px;
+      border: 1px solid #ced4da;
+      border-radius: 25px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      background: white;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    .search-box-wrapper input:focus {
+      border-color: #28a745;
+      box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
+    }
+
+    .location-banner {
+      max-width: 1280px;
+      margin: 0 auto 20px;
+      padding: 10px 20px;
+      background-color: #e8f5e9;
+      color: #28a745;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 4 PRODUCTS PER ROW ON DESKTOP */
+    #productList {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 20px 40px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    /* ALIGNED ABOUT FARMFRESH CARD */
+    .farmfresh-about-card {
+      grid-column: 1 / -1;
+      background: white;
+      border-radius: 12px;
+      padding: 35px 30px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      max-width: 780px;
+      margin: 15px auto;
+      border: 1px solid #e0e0e0;
+    }
+
+    .about-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #e8f5e9;
+      color: #28a745;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .farmfresh-about-card h2 {
+      color: #28a745;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .farmfresh-about-card p.subtitle {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 25px;
+      max-width: 580px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .feature-item {
+      background: #ffffff;
+      padding: 16px 12px;
+      border-radius: 10px;
+      border: 1px solid #e9ecef;
+    }
+
+    .feature-item .feat-icon {
+      width: 44px;
+      height: 44px;
+      background: #e8f5e9;
+      color: #28a745;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin: 0 auto 10px;
+    }
+
+    .feature-item h4 {
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .feature-item p {
+      font-size: 12px;
+      color: #666;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .btn-locate-hero {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 0.25s ease, transform 0.15s ease;
+    }
+
+    .btn-locate-hero:hover {
+      background: #218838;
+      transform: scale(1.02);
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 14px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .rating-badge {
+      position: absolute;
+      top: 22px;
+      left: 22px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+      color: #f57f17;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
+
+    .distance-badge {
+      position: absolute;
+      top: 22px;
+      right: 22px;
+      background: rgba(40, 167, 69, 0.95);
+      color: white;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .product-card h3 {
+      font-size: 16px;
+      margin: 0 0 4px;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .product-card-body {
+      flex-grow: 1;
+      margin-bottom: 10px;
+    }
+
+    .product-card-body p {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 6px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .product-card .price {
+      font-size: 16px;
+      color: #28a745;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .product-card .stock-available {
+      font-size: 11px;
+      color: #28a745;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .product-card .qty-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .product-card .qty-controls button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 4px;
+      font-size: 15px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+
+    .product-card .qty-controls button:hover {
+      background-color: #218838;
+      transform: scale(1.05);
+    }
+
+    .product-card .qty-controls span.qty-num {
+      font-size: 15px;
+      font-weight: 700;
+      color: #28a745;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .product-card .add-to-cart-btn {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 9px;
+      font-size: 13px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s;
+    }
+
+    .product-card .add-to-cart-btn:hover {
+      background-color: #218838;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #3c83e6;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+      z-index: 9999;
+    }
+
+    .toast.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* CENTERED SLEEK WARNING MODAL */
+    .center-error-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(4px);
+      z-index: 999999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .center-error-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .center-error-box {
+      background: white;
+      border-radius: 16px;
+      padding: 25px 30px;
+      width: 90%;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+      border-top: 5px solid #28a745;
+      transform: scale(0.9);
+      transition: transform 0.25s ease;
+    }
+
+    .center-error-overlay.active .center-error-box {
+      transform: scale(1);
+    }
+
+    /* Reviews Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: white;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 480px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    .modal-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 18px;
+      color: #28a745;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #888;
+    }
+
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    /* RESPONSIVE MEDIA QUERIES */
+    @media (max-width: 1024px) {
+      #productList {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      body { padding-top: 110px; }
+
+      .navbar {
+        padding: 12px 18px;
+        flex-wrap: wrap;
+      }
+      .navbar h1 { font-size: 22px; }
+      .navbar .nav-right { gap: 12px; }
+      .navbar a { font-size: 13px; }
+
+      .greeting-search-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 0 15px;
+        margin: 12px auto;
+      }
+      .greeting-search-container h2 { font-size: 20px; }
+      .search-box-wrapper { width: 100%; }
+
+      .location-banner {
+        margin: 0 15px 15px;
+        font-size: 11px;
+        padding: 8px 12px;
+      }
+
+      .farmfresh-about-card {
+        padding: 25px 18px;
+        margin: 10px auto;
+      }
+      .farmfresh-about-card h2 { font-size: 20px; }
+      .farmfresh-about-card p.subtitle { font-size: 13px; margin-bottom: 20px; }
+      .features-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-bottom: 25px;
+      }
+      .feature-item { padding: 15px; }
+      .btn-locate-hero {
+        padding: 12px 22px;
+        font-size: 14px;
+        width: 100%;
+        justify-content: center;
+      }
+
+      #productList {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding: 0 12px 30px;
+      }
+
+      .product-card {
+        padding: 10px;
+        border-radius: 10px;
+      }
+
+      .product-card img {
+        height: 125px;
+        margin-bottom: 6px;
+      }
+
+      .rating-badge {
+        top: 15px; left: 15px;
+        font-size: 9px;
+        padding: 2px 6px;
+      }
+
+      .distance-badge {
+        top: 15px; right: 15px;
+        font-size: 9px;
+        padding: 2px 6px;
+      }
+
+      .product-card h3 {
+        font-size: 13px;
+        margin-bottom: 2px;
+      }
+
+      .product-card-body p {
+        font-size: 11px;
+        margin-bottom: 4px;
+        -webkit-line-clamp: 1;
+        line-clamp: 1;
+      }
+
+      .product-card .price {
+        font-size: 14px;
+      }
+
+      .product-card .stock-available {
+        font-size: 10px;
+        margin-bottom: 6px;
+      }
+
+      .product-card .qty-controls button {
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
+      }
+
+      .product-card .add-to-cart-btn {
+        padding: 7px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="navbar">
+    <a href="/" class="brand-logo-link"><h1>FarmFresh</h1></a>
+    <div class="nav-right" id="navbarRight">
+    </div>
+  </div>
+
+  <div class="greeting-search-container">
+    <h2 id="userGreeting">Hi, Guest</h2>
+    <div class="search-box-wrapper" id="searchBoxWrapper">
+      <i class="fas fa-magnifying-glass search-icon"></i>
+      <input type="text" id="searchBox" placeholder="Search farm fresh produce..." />
+    </div>
+  </div>
+
+  <div class="location-banner" id="locationBanner">
+    <i class="fas fa-location-dot"></i> Share location to Explore
+  </div>
+
+  <div id="productList"></div>
+
+  <div id="toast" class="toast"></div>
+
+  <!-- CENTERED COMPACT STOCK WARNING MODAL -->
+  <div id="centerErrorOverlay" class="center-error-overlay">
+    <div class="center-error-box">
+      <div style="font-size: 32px; color: #28a745; margin-bottom: 8px;"><i class="fas fa-exclamation-circle"></i></div>
+      <h3 style="color: #28a745; margin-bottom: 6px; font-size: 18px;">Stock Limit Reached</h3>
+      <p id="centerErrorText" style="color: #495057; font-size: 14px; font-weight: 600; margin-bottom: 16px;">Only available stock reached.</p>
+      <button onclick="closeCenterErrorModal()" style="background-color: #28a745; color: white; border: none; padding: 8px 22px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;">Got it</button>
+    </div>
+  </div>
+
+  <!-- Reviews Modal -->
+  <div id="reviewsModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalProductName">Product Reviews</h3>
+        <button class="modal-close" onclick="closeReviewsModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modalReviewsList">
+        <p>Loading reviews...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cartMap = new Map();
+    let userLat = null;
+    let userLon = null;
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3000);
+    }
+
+    function showCenterStockError(message) {
+      document.getElementById("centerErrorText").textContent = message;
+      document.getElementById("centerErrorOverlay").classList.add("active");
+    }
+
+    function closeCenterErrorModal() {
+      document.getElementById("centerErrorOverlay").classList.remove("active");
+    }
+
+    function logout() {
+      document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      window.location.href = "/";
+    }
+
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+      return null;
+    }
+
+    function updateCartBadge() {
+      let totalCount = 0;
+      cartMap.forEach((qty) => totalCount += qty);
+
+      const cartCountEl = document.getElementById("cartCount");
+      if (cartCountEl) {
+        if (totalCount > 0) {
+          cartCountEl.textContent = totalCount;
+          cartCountEl.style.display = "inline-block";
+        } else {
+          cartCountEl.style.display = "none";
+        }
+      }
+    }
+
+    async function getUser() {
+      const token = getCookie("token");
+      const navbarRight = document.getElementById("navbarRight");
+
+      if (token) {
+        try {
+          const res = await fetch("/api/getuser", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token })
+          });
+          const data = await res.json();
+          if (data.status === 'success' && data.user) {
+            const role = data.user.role;
+            if (role === 'farmer') return window.location.href = "/farmer/dashboard";
+            if (role === 'admin') return window.location.href = "/admin/dashboard";
+
+            document.getElementById("userGreeting").textContent = `Hi, ${data.user.name}`;
+            navbarRight.innerHTML = `
+              <a href="/cart" id="cartLink" class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cartCount" class="cart-count">0</span>
+              </a>
+              <a href="/">Home</a>
+              <a href="/myorders">My Orders</a>
+              <a href="/profile">Profile</a>
+            `;
+
+          } else {
+            logout();
+          }
+        } catch {
+          logout();
+        }
+      } else {
+        navbarRight.innerHTML = `
+          <a href="/">Home</a>
+          <a href="/login">Login</a>
+          <a href="/register">Register</a>
+        `;
+      }
+    }
+
+    async function loadCart() {
+      const token = getCookie("token");
+      if (!token) return;
+
+      try {
+        const res = await fetch("/api/cart/view", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token })
+        });
+        const data = await res.json();
+        if (data.status === "success" && data.cart) {
+          cartMap.clear();
+          data.cart.forEach(item => {
+            cartMap.set(item.product_id, item.quantity);
+          });
+          updateCartBadge();
+        }
+      } catch (err) {
+        console.error("Cart load error", err);
+      }
+    }
+
+    function renderAboutHeroCard() {
+      const container = document.getElementById("productList");
+      const banner = document.getElementById("locationBanner");
+      const searchWrapper = document.getElementById("searchBoxWrapper");
+
+      // Hide Search Bar until location is granted!
+      if (searchWrapper) searchWrapper.style.display = "none";
+
+      banner.innerHTML = `<i class="fas fa-location-dot"></i> Share location to Explore`;
+
+      container.innerHTML = `
+        <div class="farmfresh-about-card">
+          <div class="about-hero-badge"><i class="fas fa-seedling"></i> Welcome to FarmFresh</div>
+          <h2>Farm-Fresh Produce, Delivered Directly From Local Farmers</h2>
+          <p class="subtitle">Connecting local growers directly with your household for organic, zero-middleman produce.</p>
+
+          <div class="features-grid">
+            <div class="feature-item">
+              <div class="feat-icon"><i class="fas fa-leaf"></i></div>
+              <h4>100% Organic & Fresh</h4>
+              <p>Harvested daily by verified local farmers</p>
+            </div>
+            <div class="feature-item">
+              <div class="feat-icon"><i class="fas fa-truck-ramp-box"></i></div>
+              <h4>Hyper-Local Delivery</h4>
+              <p>Delivered within your area's radius</p>
+            </div>
+            <div class="feature-item">
+              <div class="feat-icon"><i class="fas fa-hand-holding-dollar"></i></div>
+              <h4>Direct Farmer Prices</h4>
+              <p>Fair earnings for growers, lower prices for you</p>
+            </div>
+          </div>
+
+          <div class="action-section">
+            <button onclick="requestUserLocation()" class="btn-locate-hero" id="locateHeroBtn">
+              <i class="fas fa-location-crosshairs"></i> Share location to Explore
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function requestUserLocation() {
+      const btn = document.getElementById("locateHeroBtn");
+      if (btn) {
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Locating farms...`;
+        btn.disabled = true;
+      }
+
+      if (!navigator.geolocation) {
+        showToast("Geolocation is not supported by your browser.");
+        renderAboutHeroCard();
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          userLat = pos.coords.latitude;
+          userLon = pos.coords.longitude;
+          sessionStorage.setItem("farmfresh_lat", userLat);
+          sessionStorage.setItem("farmfresh_lon", userLon);
+
+          // Show Search Bar!
+          const searchWrapper = document.getElementById("searchBoxWrapper");
+          if (searchWrapper) searchWrapper.style.display = "block";
+
+          document.getElementById("locationBanner").innerHTML = `<i class="fas fa-location-arrow"></i> Showing fresh produce within delivery radius of your location`;
+          fetchProducts();
+        },
+        (err) => {
+          console.warn("Location permission error/denied:", err);
+          if (!userLat || !userLon) {
+            renderAboutHeroCard();
+          }
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+      );
+    }
+
+    async function fetchProducts(search = "") {
+      if (!userLat || !userLon) {
+        renderAboutHeroCard();
+        return;
+      }
+
+      // Show Search Bar!
+      const searchWrapper = document.getElementById("searchBoxWrapper");
+      if (searchWrapper) searchWrapper.style.display = "block";
+
+      const token = getCookie("token");
+      const container = document.getElementById("productList");
+      container.innerHTML = "<p style='grid-column: 1 / -1; text-align:center; padding:30px; color:#666;'>Loading produce in your area...</p>";
+
+      try {
+        const payload = { search, lat: userLat, lon: userLon };
+
+        const res = await fetch("/api/products/search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        container.innerHTML = "";
+
+        if (data.status === "success" && data.data?.length) {
+          data.data.forEach(product => {
+            const qtyInCart = cartMap.get(product.id) || 0;
+            const rating = product.avg_rating > 0 ? parseFloat(product.avg_rating).toFixed(1) : "New";
+            const reviewCount = product.review_count || 0;
+            const distance = product.distance_km ? `${product.distance_km} km` : null;
+
+            let imgSrc = product.image_url;
+            if (!imgSrc.startsWith('http') && !imgSrc.startsWith('/')) {
+              imgSrc = '/' + imgSrc;
+            }
+
+            const card = document.createElement("div");
+            card.className = "product-card";
+
+            card.innerHTML = `
+              <img src="${imgSrc}" alt="${product.name}" onerror="this.src='https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500&auto=format&fit=crop'" />
+              <div class="rating-badge" onclick="openReviewsModal(${product.id}, '${product.name}')">
+                <i class="fas fa-star"></i> ${rating} ${reviewCount > 0 ? `(${reviewCount})` : ''}
+              </div>
+              ${distance ? `<div class="distance-badge"><i class="fas fa-truck"></i> ${distance}</div>` : ''}
+              <h3>${product.name}</h3>
+              <div class="product-card-body">
+                <p>${product.description}</p>
+                <p class="price">₹${parseFloat(product.price).toFixed(2)}</p>
+                <div class="stock-available"><i class="fas fa-cubes"></i> Stock: ${product.quantity} kg</div>
+              </div>
+              <div id="controls-${product.id}">
+                ${qtyInCart > 0 ? `
+                  <div class="qty-controls">
+                    <button type="button" onclick="updateCart(${product.id}, -1, this, event)">-</button>
+                    <span id="qty-span-${product.id}" class="qty-num">${qtyInCart}</span>
+                    <button type="button" onclick="updateCart(${product.id}, 1, this, event)">+</button>
+                  </div>
+                ` : `
+                  ${token ? `<button type="button" class="add-to-cart-btn" onclick="updateCart(${product.id}, 1, this, event)">Add to Cart</button>` : ""}
+                `}
+              </div>
+            `;
+
+            container.appendChild(card);
+          });
+        } else {
+          container.innerHTML = "<p style='grid-column: 1 / -1; text-align:center; padding:30px; color:#666;'>No farm produce currently available within your delivery radius.</p>";
+        }
+      } catch {
+        container.innerHTML = "<p style='grid-column: 1 / -1; text-align:center; padding:30px; color:#dc3545;'>Failed to load products.</p>";
+      }
+    }
+
+    async function updateCart(productId, change, button, e) {
+      if (e) e.preventDefault();
+      const token = getCookie("token");
+      if (!token) return window.location.href = '/login';
+
+      const currentQty = cartMap.get(productId) || 0;
+      const newQty = currentQty + change;
+
+      if (newQty < 0) return;
+      if (button) button.disabled = true;
+
+      try {
+        let endpoint = "";
+        let body = { token, product_id: productId };
+
+        if (currentQty === 0 && change > 0) {
+          endpoint = "add";
+          body.quantity = 1;
+        } else if (newQty === 0) {
+          endpoint = "remove";
+        } else {
+          endpoint = "update";
+          body.quantity = newQty;
+        }
+
+        const res = await fetch(`/api/cart/${endpoint}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+
+        const data = await res.json();
+
+        if (data.status === "success") {
+          const ctrlContainer = document.getElementById(`controls-${productId}`);
+          if (newQty === 0) {
+            cartMap.delete(productId);
+            showToast("Removed from cart!");
+            if (ctrlContainer) {
+              ctrlContainer.innerHTML = `<button type="button" class="add-to-cart-btn" onclick="updateCart(${productId}, 1, this, event)">Add to Cart</button>`;
+            }
+          } else {
+            cartMap.set(productId, newQty);
+            showToast(change > 0 ? "Quantity increased!" : "Quantity decreased!");
+            const span = document.getElementById(`qty-span-${productId}`);
+            if (span) {
+              span.textContent = newQty;
+            } else if (ctrlContainer) {
+              ctrlContainer.innerHTML = `
+                <div class="qty-controls">
+                  <button type="button" onclick="updateCart(${productId}, -1, this, event)">-</button>
+                  <span id="qty-span-${productId}" class="qty-num">${newQty}</span>
+                  <button type="button" onclick="updateCart(${productId}, 1, this, event)">+</button>
+                </div>
+              `;
+            }
+          }
+          updateCartBadge();
+        } else {
+          showCenterStockError(data.message || "Cannot exceed available stock!");
+        }
+      } catch (err) {
+        showToast("Error updating cart.");
+      } finally {
+        if (button) button.disabled = false;
+      }
+    }
+
+    async function openReviewsModal(productId, productName) {
+      document.getElementById("modalProductName").textContent = `${productName} — Reviews`;
+      const modal = document.getElementById("reviewsModal");
+      const list = document.getElementById("modalReviewsList");
+      list.innerHTML = "<p>Loading reviews...</p>";
+      modal.classList.add("active");
+
+      try {
+        const res = await fetch("/api/reviews/get", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ product_id: productId })
+        });
+        const data = await res.json();
+        const textReviews = (data.status === "success" && data.reviews) ? data.reviews.filter(r => r.review && r.review.trim() !== '') : [];
+
+        if (textReviews.length > 0) {
+          list.innerHTML = textReviews.map(r => `
+            <div class="review-item">
+              <div class="review-meta">
+                <span style="font-weight:600;">${r.reviewer_name || 'Customer'}</span>
+                <span class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+              </div>
+              <p class="review-text">${r.review}</p>
+            </div>
+          `).join('');
+        } else {
+          list.innerHTML = "<p style='color: #888; text-align: center; padding: 15px 0;'>No written reviews for this product yet.</p>";
+        }
+      } catch {
+        list.innerHTML = "<p style='color: red;'>Failed to load reviews.</p>";
+      }
+    }
+
+    function closeReviewsModal() {
+      document.getElementById("reviewsModal").classList.remove("active");
+    }
+
+    document.getElementById("searchBox").addEventListener("input", (e) => {
+      fetchProducts(e.target.value);
+    });
+
+    (async function () {
+      await getUser();
+      await loadCart();
+
+      const savedLat = sessionStorage.getItem("farmfresh_lat");
+      const savedLon = sessionStorage.getItem("farmfresh_lon");
+
+      if (savedLat && savedLon) {
+        userLat = parseFloat(savedLat);
+        userLon = parseFloat(savedLon);
+        const searchWrapper = document.getElementById("searchBoxWrapper");
+        if (searchWrapper) searchWrapper.style.display = "block";
+        document.getElementById("locationBanner").innerHTML = `<i class="fas fa-location-arrow"></i> Showing fresh produce within delivery radius of your location`;
+        fetchProducts();
+      } else {
+        renderAboutHeroCard();
+        requestUserLocation();
+      }
+    })();
+  </script>
+</body>
+
+</html>

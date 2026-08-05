@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Orders - FarmFresh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      padding-top: 80px;
+    }
+
+    .navbar {
+      background-color: #28a745;
+      color: white;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+    }
+
+    .navbar h1 { font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: 700; margin: 0; line-height: 1; color: white; }
+    .navbar .brand-logo-link { color: white; text-decoration: none; }
+    .navbar .brand-logo-link:hover { opacity: 0.95; text-decoration: none; }
+    .navbar div { display: flex; gap: 25px; align-items: center; }
+    .navbar a {
+      color: white; text-decoration: none; font-weight: 600; font-size: 16px; white-space: nowrap; transition: opacity 0.2s ease;
+    }
+    .navbar a:hover { opacity: 0.85; }
+    .cart-icon { font-size: 18px; position: relative; display: inline-flex; align-items: center; }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      background: white;
+      padding: 35px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      text-align: center;
+      color: #28a745;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+
+    .order-box {
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      padding: 22px;
+      background: #ffffff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f3f5;
+      font-weight: 600;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .payment-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    .payment-badge.cod {
+      background-color: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+    }
+
+    .payment-badge.razorpay {
+      background-color: #e3f2fd;
+      color: #0d47a1;
+      border: 1px solid #bbdefb;
+    }
+
+    .order-items-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px dashed #f1f3f5;
+      font-size: 14px;
+    }
+
+    .order-items-row:last-child { border-bottom: none; }
+
+    .status {
+      text-transform: capitalize;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    .status.pending { background: #fff3cd; color: #856404; }
+    .status.confirmed { background: #cce5ff; color: #004085; }
+    .status.out_for_delivery { background: #e2d9f3; color: #4a154b; }
+    .status.delivered { background: #d4edda; color: #155724; }
+
+    .delivery-code-box {
+      background: #f1fdf3;
+      border: 1px dashed #28a745;
+      border-radius: 10px;
+      padding: 12px 18px;
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .delivery-code-box .code-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .delivery-code-box .code-digits {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      color: #28a745;
+      background: white;
+      padding: 4px 14px;
+      border-radius: 8px;
+      border: 1px solid #d4edd8;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+      padding-top: 12px;
+      border-top: 1px solid #eee;
+    }
+
+    .total {
+      font-size: 18px;
+      font-weight: 700;
+      color: #28a745;
+    }
+
+    .rate-trigger {
+      color: #ffc107;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 15px;
+      background: #fffdf5;
+      border: 1px solid #ffeeba;
+      transition: all 0.2s ease;
+    }
+
+    .rate-trigger:hover {
+      background: #fff9e6;
+      transform: scale(1.03);
+    }
+
+    .rated-badge {
+      font-size: 13px;
+      font-weight: 600;
+      color: #28a745;
+      background: #e8f5e9;
+      padding: 4px 10px;
+      border-radius: 15px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Aesthetic Rating Modal */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.5); z-index: 10000;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .review-card {
+      background: white; border-radius: 16px; padding: 30px;
+      width: 90%; max-width: 440px; box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    .review-card h3 { font-size: 20px; color: #28a745; margin-bottom: 8px; }
+    .review-card p { font-size: 13px; color: #777; margin-bottom: 20px; }
+
+    .aesthetic-stars { font-size: 32px; color: #e0e0e0; cursor: pointer; margin-bottom: 20px; display: flex; justify-content: center; gap: 8px; }
+    .aesthetic-stars i.active { color: #ffc107; text-shadow: 0 0 10px rgba(255, 193, 7, 0.4); }
+
+    .review-textarea {
+      width: 100%; padding: 12px; border: 1px solid #ced4da;
+      border-radius: 8px; font-family: inherit; font-size: 14px; margin-bottom: 20px; outline: none;
+    }
+    .review-textarea:focus { border-color: #28a745; }
+
+    .toast {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+      background-color: #3c83e6; color: white; padding: 12px 20px;
+      border-radius: 8px; font-weight: bold; font-size: 15px; opacity: 0;
+      visibility: hidden; transition: opacity 0.4s; z-index: 10001;
+    }
+    .toast.show { opacity: 1; visibility: visible; }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <a href="/" class="brand-logo-link"><h1>FarmFresh</h1></a>
+    <div>
+      <a href="/cart" class="cart-icon" title="View Cart"><i class="fas fa-shopping-cart"></i></a>
+      <a href="/">Home</a>
+      <a href="/myorders">My Orders</a>
+      <a href="/profile">Profile</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>My Orders</h2>
+    <div id="orderList">
+      <p style="text-align:center; color:#888;">Loading orders...</p>
+    </div>
+  </div>
+
+  <!-- Aesthetic Review Modal -->
+  <div id="reviewModal" class="modal-overlay">
+    <div class="review-card">
+      <h3 id="reviewProductName">Rate Produce Quality</h3>
+      <p>How fresh was your produce?</p>
+      <div class="aesthetic-stars" id="starRating">
+        <i class="fas fa-star" data-val="1"></i>
+        <i class="fas fa-star" data-val="2"></i>
+        <i class="fas fa-star" data-val="3"></i>
+        <i class="fas fa-star" data-val="4"></i>
+        <i class="fas fa-star" data-val="5"></i>
+      </div>
+      <textarea id="reviewText" class="review-textarea" rows="3" placeholder="Write a short review (e.g. Super fresh & juicy!)..."></textarea>
+      <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        <button onclick="closeReviewModal()" style="padding: 10px 16px; border: 1px solid #ccc; background: white; border-radius: 6px; cursor: pointer;">Cancel</button>
+        <button onclick="submitReview()" style="padding: 10px 20px; border: none; background: #28a745; color: white; border-radius: 6px; font-weight: 600; cursor: pointer;">Submit Review</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const token = document.cookie.match(/(^| )token=([^;]+)/)?.[2];
+    if (!token) {
+      alert("Please login to view orders.");
+      window.location.href = "/login";
+    }
+
+    let selectedProductIdForReview = null;
+    let selectedRatingVal = 5;
+
+    function logout() {
+      document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      window.location.href = "/";
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3000);
+    }
+
+    async function loadOrders() {
+      const container = document.getElementById("orderList");
+      try {
+        const res = await fetch("/api/orders/myorders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token })
+        });
+
+        const data = await res.json();
+        container.innerHTML = "";
+
+        if (data.status === "success" && data.orders?.length) {
+          data.orders.forEach(order => {
+            let itemsHTML = "";
+            let showDeliveryCodeBox = false;
+
+            order.items.forEach(item => {
+              const itemStatus = item.item_status || order.status;
+              const statusText = itemStatus.replace(/_/g, ' ');
+
+              if (itemStatus === 'out_for_delivery' || itemStatus === 'confirmed') {
+                showDeliveryCodeBox = true;
+              }
+
+              let ratingActionHTML = '';
+              if (itemStatus === 'delivered') {
+                if (item.user_rating) {
+                  ratingActionHTML = `<span class="rated-badge"><i class="fas fa-star" style="color:#ffc107;"></i> Rated ${item.user_rating}★</span>`;
+                } else {
+                  ratingActionHTML = `
+                    <div class="rate-trigger" onclick="openReviewModal(${item.product_id}, '${item.name}')">
+                      <i class="fas fa-star"></i> Rate & Review
+                    </div>
+                  `;
+                }
+              }
+
+              itemsHTML += `
+                <div class="order-items-row">
+                  <div>
+                    <strong>${item.name}</strong> × ${item.quantity} — ₹${parseFloat(item.price * item.quantity).toFixed(2)}
+                  </div>
+                  <div style="display:flex; align-items:center; gap: 10px;">
+                    <span class="status ${itemStatus}">${statusText}</span>
+                    ${ratingActionHTML}
+                  </div>
+                </div>
+              `;
+            });
+
+            const method = order.payment_method === 'razorpay' ? 'razorpay' : 'cod';
+            const methodBadge = method === 'razorpay' 
+              ? `<span class="payment-badge razorpay"><i class="fas fa-credit-card"></i> Paid via Razorpay</span>`
+              : `<span class="payment-badge cod"><i class="fas fa-money-bill-wave"></i> Cash on Delivery (Pay ₹${parseFloat(order.total_price).toFixed(2)})</span>`;
+
+            const formattedCode = order.delivery_code ? `${order.delivery_code.substring(0, 3)} ${order.delivery_code.substring(3)}` : '';
+
+            const codeBoxHTML = (showDeliveryCodeBox && order.status !== 'delivered') ? `
+              <div class="delivery-code-box">
+                <div class="code-title">
+                  <i class="fas fa-key" style="color: #28a745; margin-right: 4px;"></i> 
+                  Share this 6-Digit Delivery Code with Farmer upon arrival:
+                </div>
+                <div class="code-digits">${formattedCode}</div>
+              </div>
+            ` : '';
+
+            container.innerHTML += `
+              <div class="order-box">
+                <div class="order-header">
+                  <span>Order #${order.id} — ${new Date(order.created_at).toLocaleDateString()}</span>
+                  ${methodBadge}
+                </div>
+                <div class="order-items">${itemsHTML}</div>
+                ${codeBoxHTML}
+                <div class="total-row">
+                  <div class="total">Total: ₹${parseFloat(order.total_price).toFixed(2)}</div>
+                </div>
+              </div>
+            `;
+          });
+        } else {
+          container.innerHTML = `<p style="text-align:center; color:#aaa;">No orders found.</p>`;
+        }
+      } catch (err) {
+        container.innerHTML = `<p style="text-align:center; color:red;">Failed to load orders.</p>`;
+      }
+    }
+
+    function openReviewModal(productId, productName) {
+      selectedProductIdForReview = productId;
+      document.getElementById("reviewProductName").textContent = `Rate & Review: ${productName}`;
+      document.getElementById("reviewText").value = "";
+      setStarRating(5);
+      document.getElementById("reviewModal").classList.add("active");
+    }
+
+    function closeReviewModal() {
+      document.getElementById("reviewModal").classList.remove("active");
+    }
+
+    function setStarRating(val) {
+      selectedRatingVal = val;
+      const stars = document.querySelectorAll("#starRating i");
+      stars.forEach((s, idx) => {
+        if (idx < val) s.classList.add("active");
+        else s.classList.remove("active");
+      });
+    }
+
+    document.querySelectorAll("#starRating i").forEach(star => {
+      star.addEventListener("click", (e) => {
+        const val = parseInt(e.target.getAttribute("data-val"));
+        setStarRating(val);
+      });
+    });
+
+    async function submitReview() {
+      if (!selectedProductIdForReview) return;
+      const reviewText = document.getElementById("reviewText").value.trim();
+
+      try {
+        const res = await fetch("/api/reviews/add", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            token,
+            product_id: selectedProductIdForReview,
+            rating: selectedRatingVal,
+            review: reviewText
+          })
+        });
+        const data = await res.json();
+        if (data.status === "success") {
+          showToast("Thank you for your review!");
+          closeReviewModal();
+          await loadOrders();
+        } else {
+          showToast(data.message || "Failed to submit review");
+        }
+      } catch {
+        showToast("Error submitting review");
+      }
+    }
+
+    loadOrders();
+  </script>
+</body>
+</html>

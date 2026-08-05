@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin - Products | FarmFresh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      min-height: 100vh;
+      background-color: #f0f4f0;
+      color: #333;
+    }
+
+    .sidebar {
+      width: 240px;
+      background: #28a745;
+      color: white;
+      padding: 28px 0;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; bottom: 0; left: 0;
+      box-shadow: 4px 0 15px rgba(0,0,0,0.12);
+      z-index: 50;
+    }
+
+    .sidebar-brand {
+      padding: 0 24px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      margin-bottom: 16px;
+    }
+
+    .sidebar-brand h2 { font-size: 22px; font-weight: 700; }
+
+    .admin-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255,255,255,0.18);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    .sidebar nav {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 0 12px;
+      flex: 1;
+    }
+
+    .sidebar nav a {
+      color: rgba(255,255,255,0.9);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 11px 14px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .sidebar nav a:hover, .sidebar nav a.active {
+      background: rgba(255,255,255,0.18);
+      color: white;
+    }
+
+    .sidebar nav a i { width: 18px; font-size: 14px; }
+
+    .main {
+      margin-left: 240px;
+      flex: 1;
+      padding: 30px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .topbar-left h1 { font-size: 22px; font-weight: 700; color: #28a745; }
+    .topbar-left p { font-size: 13px; color: #888; margin-top: 2px; }
+
+    .btn-logout {
+      background: white;
+      color: #dc3545;
+      border: 1.5px solid #dc3545;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover { background: #dc3545; color: white; }
+
+    .table-wrapper {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    thead {
+      background: #28a745;
+    }
+
+    th {
+      padding: 14px 18px;
+      text-align: left;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: white;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 12px 18px;
+      border-bottom: 1px solid #f0f0f0;
+      color: #444;
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background-color: #f8fdf9; }
+
+    .product-img {
+      width: 52px;
+      height: 52px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #eee;
+    }
+
+    .product-name { font-weight: 600; color: #333; }
+    .product-desc { font-size: 12px; color: #888; max-width: 200px; line-height: 1.4; }
+
+    .price-cell { font-weight: 700; color: #28a745; }
+
+    .stock-cell { font-weight: 600; }
+    .stock-cell.low { color: #f57c00; }
+    .stock-cell.ok  { color: #28a745; }
+
+    .farmer-name { font-weight: 600; color: #333; font-size: 13px; }
+    .farmer-email { color: #888; font-size: 11px; }
+
+    .date-cell { color: #999; font-size: 12px; white-space: nowrap; }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #28a745;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      z-index: 9999;
+    }
+
+    .toast.show { opacity: 1; visibility: visible; }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding: 20px; }
+      table { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="sidebar-brand">
+      <a href="/admin/dashboard" style="color: inherit; text-decoration: none;"><h2>FarmFresh</h2></a>
+      <div class="admin-badge"><i class="fas fa-shield-halved"></i> Admin Panel</div>
+    </div>
+    <nav>
+      <a href="/admin/dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
+      <a href="/admin/users"><i class="fas fa-users"></i> Users</a>
+      <a href="/admin/products" class="active"><i class="fas fa-box-open"></i> Products</a>
+      <a href="/admin/orders"><i class="fas fa-receipt"></i> Orders</a>
+    </nav>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <h1>All Products</h1>
+        <p>Browse all listed farm produce across all farmers</p>
+      </div>
+      <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Image</th>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Farmer</th>
+            <th>Listed On</th>
+          </tr>
+        </thead>
+        <tbody id="productTable">
+          <tr><td colspan="7" style="text-align:center;color:#aaa;padding:30px;">Loading products...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    function logout() {
+      document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      window.location.href = "/login";
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 2500);
+    }
+
+    async function fetchProducts() {
+      const table = document.getElementById("productTable");
+      try {
+        const res = await fetch("/api/products/getall", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" }
+        });
+        const data = await res.json();
+        table.innerHTML = "";
+
+        if (data.status === "success" && data.data.length > 0) {
+          data.data.forEach((product, index) => {
+            const stockClass = product.quantity < 20 ? 'low' : 'ok';
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td style="font-weight:700;color:#28a745;">${index + 1}</td>
+              <td><img class="product-img" src="/${product.image_url}" alt="${product.name}" onerror="this.src='https://images.unsplash.com/photo-1540420773420-3366772f4999?w=100&auto=format&fit=crop'" /></td>
+              <td>
+                <div class="product-name">${product.name}</div>
+                <div class="product-desc">${product.description?.substring(0, 80)}${product.description?.length > 80 ? '…' : ''}</div>
+              </td>
+              <td class="price-cell">₹${parseFloat(product.price).toFixed(2)}</td>
+              <td class="stock-cell ${stockClass}">${product.quantity} kg</td>
+              <td>
+                <div class="farmer-name">${product.farmer_name}</div>
+                <div class="farmer-email">${product.farmer_email}</div>
+              </td>
+              <td class="date-cell">${new Date(product.created_at).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' })}</td>
+            `;
+            table.appendChild(row);
+          });
+        } else {
+          table.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#aaa;padding:30px;">No products found.</td></tr>`;
+        }
+      } catch (err) {
+        table.innerHTML = `<tr><td colspan="7" style="text-align:center;color:red;padding:30px;">Error loading products.</td></tr>`;
+      }
+    }
+
+    fetchProducts();
+  </script>
+</body>
+</html>

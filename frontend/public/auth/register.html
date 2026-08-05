@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FarmFresh - Register</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding-top: 80px;
+    }
+
+    .navbar {
+      background-color: #28a745;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      box-sizing: border-box;
+    }
+
+    .navbar h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0;
+      line-height: 1;
+      color: white;
+    }
+
+    .navbar .brand-logo-link {
+      color: white;
+      text-decoration: none;
+    }
+
+    .navbar .brand-logo-link:hover {
+      opacity: 0.95;
+      text-decoration: none;
+    }
+
+    .navbar .nav-right {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      white-space: nowrap;
+      transition: opacity 0.2s ease;
+    }
+
+    .navbar a:hover {
+      opacity: 0.85;
+    }
+
+    .register-box {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      width: clamp(320px, 45%, 440px);
+      margin-top: 40px;
+    }
+
+    .register-box h2 {
+      margin-bottom: 25px;
+      color: #28a745;
+      text-align: center;
+      font-weight: 700;
+      font-size: 24px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 15px;
+      margin-top: 15px;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #28a745;
+      box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+    }
+
+    .role-selector-container {
+      margin-top: 18px;
+    }
+
+    .role-btn-group {
+      display: flex;
+      gap: 12px;
+    }
+
+    .role-btn {
+      flex: 1;
+      padding: 12px 10px;
+      margin-top: 0;
+      border: 2px solid #28a745;
+      background: white;
+      color: #28a745;
+      font-weight: 600;
+      font-size: 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+    }
+
+    .role-btn:hover {
+      background: #e8f5e9;
+      transform: none;
+    }
+
+    .role-btn.active {
+      background: #28a745;
+      color: white;
+      box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+    }
+
+    .submit-btn {
+      background: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      padding: 13px 20px;
+      border-radius: 8px;
+      width: 100%;
+      margin-top: 22px;
+      font-size: 16px;
+      font-family: inherit;
+    }
+
+    .submit-btn:hover {
+      background: #218838;
+      transform: scale(1.02);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #dc3545;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      visibility: hidden;
+      z-index: 9999;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+      text-align: center;
+      max-width: 90%;
+    }
+
+    .toast.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .toast.success {
+      background-color: #28a745;
+    }
+  </style>
+
+  <script>
+    (function () {
+      const token = document.cookie.match(/(^| )token=([^;]+)/);
+      if (token) {
+        window.location.href = "/";
+      }
+    })();
+  </script>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="brand-logo-link"><h1>FarmFresh</h1></a>
+    <div class="nav-right">
+      <a href="/">Home</a>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+    </div>
+  </nav>
+  <div class="register-box">
+    <h2>Register to FarmFresh</h2>
+    <form id="registerForm">
+      <input type="text" id="name" placeholder="Full Name" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+
+      <!-- Side-by-side Role Selector Buttons -->
+      <div class="role-selector-container">
+        <label style="display:block; font-size:13px; font-weight:600; color:#555; margin-bottom:8px; text-align:left;">Registering As:</label>
+        <div class="role-btn-group">
+          <button type="button" id="roleBtnCustomer" class="role-btn active" onclick="selectRole('customer')">
+            <i class="fas fa-shopping-cart"></i> Customer
+          </button>
+          <button type="button" id="roleBtnFarmer" class="role-btn" onclick="selectRole('farmer')">
+            <i class="fas fa-wheat-awn"></i> Farmer
+          </button>
+        </div>
+        <input type="hidden" id="role" value="customer" />
+      </div>
+
+      <button type="submit" id="submitBtn" class="submit-btn">Register</button>
+    </form>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    function selectRole(role) {
+      document.getElementById("role").value = role;
+      const customerBtn = document.getElementById("roleBtnCustomer");
+      const farmerBtn = document.getElementById("roleBtnFarmer");
+      if (role === 'customer') {
+        customerBtn.classList.add("active");
+        farmerBtn.classList.remove("active");
+      } else {
+        farmerBtn.classList.add("active");
+        customerBtn.classList.remove("active");
+      }
+    }
+
+    function showToast(message, isSuccess = false) {
+      const toast = document.getElementById("toast");
+      toast.className = `toast show ${isSuccess ? 'success' : ''}`;
+      toast.textContent = message;
+
+      setTimeout(() => {
+        toast.className = toast.className.replace("show", "");
+      }, 4000);
+    }
+
+    document.getElementById("registerForm").onsubmit = async function (e) {
+      e.preventDefault();
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Registering...";
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const role = document.getElementById("role").value;
+
+      try {
+        const res = await fetch("/api/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password, role })
+        });
+
+        const data = await res.json();
+
+        if (data.status === "success") {
+          document.cookie = `token=${data.token}; path=/;`;
+          showToast("Registration successful! Redirecting...", true);
+          setTimeout(() => window.location.href = "/", 1000);
+        } else {
+          showToast(data.message || "Registration failed.");
+        }
+      } catch (err) {
+        showToast("Unable to connect. Please try again.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Register";
+      }
+    };
+  </script>
+</body>
+</html>

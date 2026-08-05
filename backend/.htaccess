@@ -1,0 +1,7 @@
+RewriteEngine On
+
+# Send all requests to the router, except for real files/dirs
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /index.php?url=$1 [QSA,L]

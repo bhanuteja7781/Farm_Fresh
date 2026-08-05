@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Profile - FarmFresh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      padding-top: 80px;
+    }
+
+    .navbar {
+      background-color: #28a745;
+      color: white;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+    }
+
+    .navbar h1 { font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: 700; margin: 0; line-height: 1; color: white; }
+    .navbar .brand-logo-link { color: white; text-decoration: none; }
+    .navbar .brand-logo-link:hover { opacity: 0.95; text-decoration: none; }
+    .navbar div { display: flex; gap: 25px; align-items: center; }
+    .navbar a {
+      color: white; text-decoration: none; font-weight: 600; font-size: 16px; white-space: nowrap; transition: opacity 0.2s ease;
+    }
+    .navbar a:hover { opacity: 0.85; }
+
+    .container {
+      max-width: 650px;
+      margin: 30px auto;
+      background: white;
+      padding: 35px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding-bottom: 25px;
+      margin-bottom: 30px;
+      border-bottom: 1px solid #e9ecef;
+      flex-wrap: wrap;
+    }
+
+    .btn-profile-logout {
+      background-color: #fff;
+      color: #dc3545;
+      border: 1.5px solid #dc3545;
+      padding: 9px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-profile-logout:hover {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .avatar-circle {
+      width: 75px; height: 75px;
+      background: linear-gradient(135deg, #28a745, #218838);
+      color: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 30px; font-weight: 700;
+      box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+    }
+
+    .profile-info h2 { font-size: 22px; color: #28a745; margin-bottom: 4px; }
+    .profile-info p { font-size: 14px; color: #6c757d; }
+
+    .role-badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 12px;
+      margin-top: 4px;
+      background: #e8f5e9;
+      color: #28a745;
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #28a745;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: #495057;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #28a745;
+      box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
+    }
+
+    .form-group input[readonly] {
+      background-color: #e9ecef;
+      color: #6c757d;
+      cursor: not-allowed;
+    }
+
+    .btn-save {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-save:hover {
+      background-color: #218838;
+    }
+
+    .btn-reset-toggle {
+      background-color: #f8f9fa;
+      color: #28a745;
+      border: 1px solid #28a745;
+      padding: 11px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 25px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-reset-toggle:hover {
+      background-color: #e8f5e9;
+    }
+
+    /* Modal for Reset Password */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.5); z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .modal-card {
+      background: white; border-radius: 16px; padding: 30px;
+      width: 90%; max-width: 440px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .toast {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+      background-color: #3c83e6; color: white; padding: 12px 20px;
+      border-radius: 8px; font-weight: bold; font-size: 15px; opacity: 0;
+      visibility: hidden; transition: opacity 0.4s; z-index: 10001;
+    }
+    .toast.show { opacity: 1; visibility: visible; }
+    .toast.error { background-color: #dc3545; }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <a href="/" id="brandLogoLink" class="brand-logo-link"><h1>FarmFresh</h1></a>
+    <div id="navLinks">
+      <a href="/cart" class="cart-icon" title="View Cart"><i class="fas fa-shopping-cart"></i></a>
+      <a href="/">Home</a>
+      <a href="/myorders">My Orders</a>
+      <a href="/profile">Profile</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="profile-header">
+      <div style="display:flex; align-items:center; gap:20px;">
+        <div class="avatar-circle" id="userAvatar">U</div>
+        <div class="profile-info">
+          <h2 id="profileName">Loading Profile...</h2>
+          <p id="profileEmail">user@example.com</p>
+          <span class="role-badge" id="profileRole">Customer</span>
+        </div>
+      </div>
+      <button type="button" onclick="logout()" class="btn-profile-logout">
+        <i class="fas fa-right-from-bracket"></i> Logout
+      </button>
+    </div>
+
+    <!-- Personal Info Form -->
+    <form id="infoForm" onsubmit="handleSaveInfo(event)">
+      <div class="section-title">
+        <i class="fas fa-user-edit"></i> Personal Details
+      </div>
+
+      <div class="form-group">
+        <label for="nameInput">Full Name</label>
+        <input type="text" id="nameInput" required placeholder="Your full name" />
+      </div>
+
+      <div class="form-group">
+        <label for="emailInput">Email Address</label>
+        <input type="email" id="emailInput" readonly />
+      </div>
+
+      <div class="form-group">
+        <label for="mobileInput">Mobile Phone Number</label>
+        <input type="tel" id="mobileInput" placeholder="Enter 10-digit mobile number"
+          oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="10" />
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <button type="submit" class="btn-save">
+          <i class="fas fa-save"></i> Save Personal Details
+        </button>
+
+        <button type="button" class="btn-reset-toggle" onclick="openPasswordModal()">
+          <i class="fas fa-key"></i> Reset Password
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Password Reset Modal -->
+  <div id="passwordModal" class="modal-overlay">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h3 style="color:#28a745; margin:0;"><i class="fas fa-lock"></i> Reset Password</h3>
+        <span onclick="closePasswordModal()" style="font-size:24px; cursor:pointer; color:#888;">&times;</span>
+      </div>
+
+      <form id="passwordForm" onsubmit="handleSavePassword(event)">
+        <div class="form-group">
+          <label for="currentPasswordInput">Current Password</label>
+          <input type="password" id="currentPasswordInput" placeholder="Enter current password" required />
+        </div>
+
+        <div class="form-group">
+          <label for="newPasswordInput">New Password</label>
+          <input type="password" id="newPasswordInput" placeholder="New password (min 6 chars)" required />
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPasswordInput">Confirm New Password</label>
+          <input type="password" id="confirmPasswordInput" placeholder="Re-enter new password" required />
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;">
+          <button type="button" onclick="closePasswordModal()" style="padding:10px 18px; border:1px solid #ccc; background:white; border-radius:8px; cursor:pointer;">Cancel</button>
+          <button type="submit" class="btn-save"><i class="fas fa-key"></i> Update Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const rawToken = document.cookie.match(/(^| )token=([^;]+)/)?.[2];
+    const token = rawToken ? decodeURIComponent(rawToken) : null;
+    if (!token) {
+      alert("Please login to view your profile.");
+      window.location.href = "/login";
+    }
+
+    function logout() {
+      document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      window.location.href = "/login";
+    }
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.className = `toast show ${isError ? 'error' : ''}`;
+      setTimeout(() => toast.className = toast.className.replace("show", ""), 3000);
+    }
+
+    function openPasswordModal() {
+      document.getElementById("currentPasswordInput").value = "";
+      document.getElementById("newPasswordInput").value = "";
+      document.getElementById("confirmPasswordInput").value = "";
+      document.getElementById("passwordModal").classList.add("active");
+    }
+
+    function closePasswordModal() {
+      document.getElementById("passwordModal").classList.remove("active");
+    }
+
+    async function loadProfile() {
+      try {
+        const res = await fetch("/api/profile", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token })
+        });
+        const data = await res.json();
+
+        if (data.status === "success" && data.user) {
+          const u = data.user;
+          document.getElementById("profileName").textContent = u.name;
+          document.getElementById("profileEmail").textContent = u.email;
+          document.getElementById("profileRole").textContent = u.role.toUpperCase();
+          document.getElementById("userAvatar").textContent = u.name ? u.name.charAt(0).toUpperCase() : 'U';
+
+          document.getElementById("nameInput").value = u.name;
+          document.getElementById("emailInput").value = u.email;
+          document.getElementById("mobileInput").value = u.mobile || '';
+
+          const navLinks = document.getElementById("navLinks");
+          const brandLink = document.getElementById("brandLogoLink");
+          if (u.role === 'farmer') {
+            if (brandLink) brandLink.href = "/farmer/dashboard";
+            navLinks.innerHTML = `
+              <a href="/farmer/dashboard">Dashboard</a>
+              <a href="/addproduct">Add Product</a>
+              <a href="/farmer/orders">Orders</a>
+              <a href="/farmer/myproducts">My Products</a>
+              <a href="/profile">Profile</a>
+            `;
+          } else {
+            navLinks.innerHTML = `
+              <a href="/cart" class="cart-icon" title="View Cart"><i class="fas fa-shopping-cart"></i></a>
+              <a href="/">Home</a>
+              <a href="/myorders">My Orders</a>
+              <a href="/profile">Profile</a>
+            `;
+          }
+        } else {
+          showToast(data.message || "Failed to load profile", true);
+        }
+      } catch (err) {
+        showToast("Error loading profile details", true);
+      }
+    }
+
+    async function handleSaveInfo(e) {
+      e.preventDefault();
+      const name = document.getElementById("nameInput").value.trim();
+      const mobile = document.getElementById("mobileInput").value.trim();
+
+      if (!name) {
+        showToast("Please enter your full name.", true);
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/profile/update", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, name, mobile })
+        });
+        const data = await res.json();
+
+        if (data.status === "success") {
+          showToast("Personal details updated!");
+          loadProfile();
+        } else {
+          showToast(data.message || "Failed to update profile", true);
+        }
+      } catch {
+        showToast("Error updating details.", true);
+      }
+    }
+
+    async function handleSavePassword(e) {
+      e.preventDefault();
+      const name = document.getElementById("nameInput").value.trim();
+      const mobile = document.getElementById("mobileInput").value.trim();
+      const currentPassword = document.getElementById("currentPasswordInput").value;
+      const newPassword = document.getElementById("newPasswordInput").value;
+      const confirmPassword = document.getElementById("confirmPasswordInput").value;
+
+      if (!currentPassword) {
+        showToast("Please enter your current password.", true);
+        return;
+      }
+
+      if (!newPassword || newPassword.length < 6) {
+        showToast("New password must be at least 6 characters.", true);
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        showToast("New passwords do not match.", true);
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/profile/update", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            token,
+            name,
+            mobile,
+            current_password: currentPassword,
+            new_password: newPassword
+          })
+        });
+        const data = await res.json();
+
+        if (data.status === "success") {
+          showToast("Password changed successfully!");
+          closePasswordModal();
+        } else {
+          showToast(data.message || "Failed to update password", true);
+        }
+      } catch {
+        showToast("Error updating password.", true);
+      }
+    }
+
+    loadProfile();
+  </script>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Farmer Dashboard - FarmFresh</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding-top: 80px;
+        }
+
+        .navbar {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        .navbar h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1;
+            color: white;
+        }
+
+        .navbar .brand-logo-link {
+            color: white;
+            text-decoration: none;
+        }
+
+        .navbar .brand-logo-link:hover {
+            opacity: 0.95;
+            text-decoration: none;
+        }
+
+        .navbar div {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            white-space: nowrap;
+            transition: opacity 0.2s ease;
+        }
+
+        .navbar a:hover {
+            opacity: 0.85;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        h3 {
+            font-size: 24pt;
+            margin-bottom: 25px;
+            color: #28a745;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #f1fdf3;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #d4edd8;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .card h4 {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .card .value {
+            font-size: 30px;
+            font-weight: 700;
+            color: #28a745;
+        }
+
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #3c83e6;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 12px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .toast.show {
+            visibility: visible;
+        }
+
+        .recent-orders {
+            margin-top: 40px;
+        }
+
+        .recent-orders h3 {
+            font-size: 20px;
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+
+        .recent-orders table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .recent-orders th,
+        .recent-orders td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .recent-orders thead {
+            background-color: #f1f1f1;
+        }
+
+        .recent-orders tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .recent-orders .status {
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .recent-orders .status.delivered { color: green; }
+        .recent-orders .status.pending { color: orange; }
+        .recent-orders .status.confirmed { color: #007bff; }
+        .recent-orders .status.out_for_delivery { color: #6f42c1; }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <a href="/farmer/dashboard" class="brand-logo-link"><h1>FarmFresh</h1></a>
+        <div>
+            <a href="/farmer/dashboard">Dashboard</a>
+            <a href="/addproduct">Add Product</a>
+            <a href="/farmer/orders">Orders</a>
+            <a href="/farmer/myproducts">My Products</a>
+            <a href="/profile">Profile</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h3 id="greet">Welcome to Your Dashboard</h3>
+        <div class="dashboard-grid">
+            <div class="card">
+                <h4>Total Products</h4>
+                <div class="value" id="totalProducts">--</div>
+            </div>
+            <div class="card">
+                <h4>Total Orders</h4>
+                <div class="value" id="totalOrders">--</div>
+            </div>
+            <div class="card">
+                <h4>Gross Sales</h4>
+                <div class="value" id="grossSales">--</div>
+            </div>
+            <div class="card">
+                <h4>Platform Fee (7.5%)</h4>
+                <div class="value" id="platformRevenue">--</div>
+            </div>
+        </div>
+    </div>
+    <div class="container recent-orders">
+        <h3 style="margin-top:20px;">Recent Orders</h3>
+        <table style="width:100%; margin-top:15px; border-collapse: collapse; font-size:14px;">
+            <thead>
+                <tr style="background:#f1f1f1;">
+                    <th style="padding:10px; text-align:left;">Order ID</th>
+                    <th style="padding:10px;">Date</th>
+                    <th style="padding:10px;">Customer</th>
+                    <th style="padding:10px;">Status</th>
+                    <th style="padding:10px;">Total</th>
+                </tr>
+            </thead>
+            <tbody id="recentOrders">
+                <tr>
+                    <td colspan="5" style="text-align:center; padding:10px; color:#888;">Loading...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="toast" class="toast">Dashboard loaded</div>
+
+    <script>
+        const token = document.cookie.match(/(^| )token=([^;]+)/)?.[2];
+        if (!token) {
+            alert("Please login as a farmer.");
+            window.location.href = "/login";
+        }
+
+        function logout() {
+            document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+            window.location.href = "/login";
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            toast.textContent = msg;
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 3000);
+        }
+
+        async function getUser() {
+            const greet = document.getElementById("greet");
+            try {
+                const res = await fetch("/api/getuser", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token })
+                });
+                const data = await res.json();
+                if (data.status === 'success' && data.user) {
+                    greet.innerHTML = `Hi, ${data.user.name}`;
+                } else {
+                    logout();
+                }
+            } catch {
+                logout();
+            }
+        }
+
+        async function loadRecentOrders() {
+            try {
+                const res = await fetch("/api/orders/farmerorders", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token })
+                });
+
+                const data = await res.json();
+                const list = document.getElementById("recentOrders");
+                list.innerHTML = "";
+
+                if (data.status === "success" && data.orders?.length) {
+                    const recent = data.orders.slice(0, 5);
+                    recent.forEach(order => {
+                        const total = order.items.reduce((acc, item) => acc + item.quantity * parseFloat(item.price), 0);
+                        const statusText = order.status.replace(/_/g, ' ');
+
+                        list.innerHTML += `
+                            <tr>
+                                <td style="padding:10px;">#${order.order_id}</td>
+                                <td style="padding:10px;">${new Date(order.created_at).toLocaleDateString()}</td>
+                                <td style="padding:10px;">${order.customer_name}</td>
+                                <td style="padding:10px;" class="status ${order.status}">${statusText}</td>
+                                <td style="padding:10px;">₹${total.toFixed(2)}</td>
+                            </tr>
+                            `;
+                    });
+                } else {
+                    list.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:10px; color:#aaa;">No orders yet.</td></tr>`;
+                }
+            } catch (err) {
+                document.getElementById("recentOrders").innerHTML = `<tr><td colspan="5" style="text-align:center; color:red;">Failed to fetch data</td></tr>`;
+            }
+        }
+
+        async function loadDashboard() {
+            try {
+                const res = await fetch("/api/dashboard/farmer", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ token })
+                });
+
+                const data = await res.json();
+
+                if (data.status === "success" && data.data) {
+                    const { total_products, total_orders, gross_sales, platform_revenue } = data.data;
+
+                    document.getElementById("totalProducts").textContent = total_products;
+                    document.getElementById("totalOrders").textContent = total_orders;
+                    document.getElementById("grossSales").textContent = "₹" + parseFloat(gross_sales).toFixed(2);
+                    document.getElementById("platformRevenue").textContent = "₹" + parseFloat(platform_revenue).toFixed(2);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        getUser();
+        loadDashboard();
+        loadRecentOrders();
+    </script>
+</body>
+</html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Farmer Orders - FarmFresh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      margin: 0;
+      padding-top: 80px;
+    }
+
+    .navbar {
+      background-color: #28a745;
+      color: white;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+    }
+
+    .navbar h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0;
+      line-height: 1;
+      color: white;
+    }
+
+    .navbar .brand-logo-link {
+      color: white;
+      text-decoration: none;
+    }
+
+    .navbar .brand-logo-link:hover {
+      opacity: 0.95;
+      text-decoration: none;
+    }
+
+    .navbar div {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      white-space: nowrap;
+      transition: opacity 0.2s ease;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      white-space: nowrap;
+      transition: opacity 0.2s ease;
+    }
+
+    .navbar a:hover {
+      opacity: 0.85;
+    }
+
+    .container {
+      max-width: 1150px;
+      margin: 30px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    h3 {
+      font-size: 22px;
+      margin-bottom: 20px;
+      color: #28a745;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f1f1f1;
+      text-align: left;
+    }
+
+    tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    .status {
+      text-transform: capitalize;
+      font-weight: 600;
+    }
+
+    .status.delivered { color: green; }
+    .status.pending { color: orange; }
+    .status.confirmed { color: #007bff; }
+    .status.out_for_delivery { color: #28a745; }
+
+    .btn-update {
+      padding: 4px 10px;
+      font-size: 12px;
+      border: none;
+      background: #28a745;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 8px;
+      font-weight: 600;
+    }
+
+    .btn-update:hover {
+      background: #218838;
+    }
+
+    .btn-complete {
+      padding: 5px 12px;
+      font-size: 12px;
+      border: none;
+      background: #28a745;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-complete:hover {
+      background: #218838;
+    }
+
+    .pay-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    .pay-badge.cod { background: #fff3cd; color: #856404; }
+    .pay-badge.razorpay { background: #e3f2fd; color: #0d47a1; }
+
+    .toast {
+      visibility: hidden;
+      min-width: 280px;
+      background-color: #3c83e6;
+      color: white;
+      text-align: center;
+      border-radius: 6px;
+      padding: 12px 18px;
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .toast.show {
+      visibility: visible;
+    }
+
+    .toast.error {
+      background-color: #dc3545;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="navbar">
+    <a href="/farmer/dashboard" class="brand-logo-link"><h1>FarmFresh</h1></a>
+    <div>
+      <a href="/farmer/dashboard">Dashboard</a>
+      <a href="/addproduct">Add Product</a>
+      <a href="/farmer/orders">Orders</a>
+      <a href="/farmer/myproducts">My Products</a>
+      <a href="/profile">Profile</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <h3>Customer Produce Orders</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Customer</th>
+          <th>Phone</th>
+          <th>Address</th>
+          <th>Payment</th>
+          <th>Ordered Items</th>
+          <th>Subtotal</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="orderList">
+        <tr>
+          <td colspan="9" style="text-align: center; color: #999;">Loading orders...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="toast" class="toast">Loaded orders</div>
+
+  <!-- Status Update Modal (Pending -> Confirmed -> Out For Delivery) -->
+  <div id="statusModal"
+    style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
+    <div
+      style="background:#fff; padding:25px 30px; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.2); width:340px; text-align:center;">
+      <h4 style="margin-bottom: 20px; color: #28a745;">Update Status</h4>
+      <select id="statusSelect" style="padding:10px; width:100%; border-radius:6px; font-size:15px; margin-bottom:20px;">
+      </select>
+      <div style="display:flex; justify-content:space-between;">
+        <button onclick="confirmStatusChange()"
+          style="padding:10px 18px; background:#28a745; border:none; color:white; border-radius:6px; font-weight:600; cursor:pointer;">Update</button>
+        <button onclick="closeModal()"
+          style="padding:10px 18px; background:#ccc; border:none; color:black; border-radius:6px; font-weight:500; cursor:pointer;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delivery Code Verification Modal (Out For Delivery -> Delivered) -->
+  <div id="verifyCodeModal"
+    style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:3000; justify-content:center; align-items:center;">
+    <div
+      style="background:#fff; padding:30px; border-radius:12px; box-shadow:0 0 20px rgba(0,0,0,0.25); width:380px; text-align:center;">
+      <h4 style="margin-bottom: 10px; color: #28a745; font-size: 20px;"><i class="fas fa-key"></i> Verify Delivery Code</h4>
+      <p style="font-size: 14px; color: #555; margin-bottom: 20px; font-weight: 500;">Ask customer for 6-digit verification code</p>
+      <input type="text" id="deliveryCodeInput" maxlength="6" placeholder="Enter 6-Digit Code"
+        style="width: 100%; padding: 12px; font-size: 22px; text-align: center; letter-spacing: 5px; font-weight: 700; border: 2px solid #28a745; border-radius: 8px; margin-bottom: 20px; outline: none;"
+        oninput="this.value = this.value.replace(/[^0-9]/g, '');" />
+      <div style="display:flex; justify-content:space-between;">
+        <button onclick="submitVerifyCode()"
+          style="padding:10px 20px; background:#28a745; border:none; color:white; border-radius:6px; font-weight:600; cursor:pointer;">Verify & Complete</button>
+        <button onclick="closeVerifyModal()"
+          style="padding:10px 16px; background:#ccc; border:none; color:black; border-radius:6px; font-weight:500; cursor:pointer;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const token = document.cookie.match(/(^| )token=([^;]+)/)?.[2];
+    let selectedOrderId = null;
+
+    if (!token) {
+      alert("Please login as a farmer to access orders.");
+      window.location.href = "/login";
+    }
+
+    function logout() {
+      document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      window.location.href = "/login";
+    }
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.className = `toast show ${isError ? 'error' : ''}`;
+      setTimeout(() => toast.className = toast.className.replace("show", ""), 3000);
+    }
+
+    function openStatusModal(orderId, currentStatus) {
+      selectedOrderId = orderId;
+      const select = document.getElementById("statusSelect");
+      select.innerHTML = "";
+
+      if (currentStatus === "pending") {
+        select.innerHTML = `<option value="confirmed">Confirmed</option>`;
+      } else if (currentStatus === "confirmed") {
+        select.innerHTML = `<option value="out_for_delivery">Out For Delivery</option>`;
+      }
+
+      document.getElementById("statusModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("statusModal").style.display = "none";
+    }
+
+    function openVerifyModal(orderId) {
+      selectedOrderId = orderId;
+      document.getElementById("deliveryCodeInput").value = "";
+      document.getElementById("verifyCodeModal").style.display = "flex";
+    }
+
+    function closeVerifyModal() {
+      document.getElementById("verifyCodeModal").style.display = "none";
+    }
+
+    async function confirmStatusChange() {
+      const newStatus = document.getElementById("statusSelect").value;
+      if (!selectedOrderId || !newStatus) return;
+
+      try {
+        const res = await fetch("/api/orders/updatestatus", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, order_id: selectedOrderId, status: newStatus })
+        });
+
+        const data = await res.json();
+        if (data.status === "success") {
+          showToast("Order status updated!");
+          closeModal();
+          loadOrders();
+        } else {
+          showToast(data.message || "Failed to update status", true);
+        }
+      } catch (err) {
+        showToast("An error occurred.", true);
+      }
+    }
+
+    async function submitVerifyCode() {
+      const code = document.getElementById("deliveryCodeInput").value.trim();
+      if (!selectedOrderId || code.length !== 6) {
+        showToast("Please enter a valid 6-digit delivery code.", true);
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/orders/verifydelivery", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, order_id: selectedOrderId, delivery_code: code })
+        });
+
+        const data = await res.json();
+        if (data.status === "success") {
+          showToast("Delivery Verified & Completed!");
+          closeVerifyModal();
+          loadOrders();
+        } else {
+          showToast(data.message || "Incorrect Delivery Code", true);
+        }
+      } catch (err) {
+        showToast("Verification failed.", true);
+      }
+    }
+
+    async function loadOrders() {
+      const list = document.getElementById("orderList");
+      list.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#666;">Loading orders...</td></tr>`;
+
+      try {
+        const res = await fetch("/api/orders/farmerorders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token })
+        });
+
+        const data = await res.json();
+        list.innerHTML = "";
+
+        if (data.status === "success" && data.orders?.length) {
+          data.orders.forEach(order => {
+            const { order_id, customer_name, created_at, payment_method, status, items, address, mobile } = order;
+
+            const payText = payment_method === 'razorpay' ? '💳 Online (Razorpay)' : '💵 COD';
+            const payClass = payment_method === 'razorpay' ? 'razorpay' : 'cod';
+
+            let itemsListHTML = items.map(i => `${i.product_name} (x${i.quantity})`).join('<br/>');
+            let grandTotal = items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+            const statusText = status.replace(/_/g, ' ');
+
+            let actionBtn = "";
+            if (status === "pending" || status === "confirmed") {
+              actionBtn = `<button class="btn-update" onclick="openStatusModal(${order_id}, '${status}')">Update Status</button>`;
+            } else if (status === "out_for_delivery") {
+              actionBtn = `<button class="btn-complete" onclick="openVerifyModal(${order_id})"><i class="fas fa-key"></i> Complete Delivery</button>`;
+            } else if (status === "delivered") {
+              actionBtn = `<span style="color:green; font-weight:600;"><i class="fas fa-check-circle"></i> Completed</span>`;
+            }
+
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td><strong>#${order_id}</strong></td>
+              <td>${customer_name}</td>
+              <td>${mobile || 'N/A'}</td>
+              <td style="max-width: 180px; white-space: normal; word-wrap: break-word;">${address || 'N/A'}</td>
+              <td><span class="pay-badge ${payClass}">${payText}</span></td>
+              <td>${itemsListHTML}</td>
+              <td><strong>₹${grandTotal.toFixed(2)}</strong></td>
+              <td class="status ${status}">${statusText}</td>
+              <td>${actionBtn}</td>
+            `;
+            list.appendChild(row);
+          });
+        } else {
+          list.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#999;">No orders yet.</td></tr>`;
+        }
+      } catch (err) {
+        list.innerHTML = `<tr><td colspan="9" style="text-align:center; color:red;">Failed to fetch orders.</td></tr>`;
+      }
+    }
+
+    loadOrders();
+  </script>
+</body>
+</html>

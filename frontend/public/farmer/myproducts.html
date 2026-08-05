@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Products - FarmFresh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+      padding-top: 80px;
+    }
+    .navbar {
+      background-color: #28a745;
+      color: white;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+    }
+    .navbar h1 { font-family: 'Poppins', sans-serif; margin: 0; font-weight: 700; font-size: 28px; line-height: 1; color: white; }
+    .navbar .brand-logo-link { color: white; text-decoration: none; }
+    .navbar .brand-logo-link:hover { opacity: 0.95; text-decoration: none; }
+    .navbar div { display: flex; align-items: center; gap: 25px; }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      transition: opacity 0.2s ease;
+      font-size: 16px;
+      white-space: nowrap;
+    }
+    .navbar a:hover { opacity: 0.85; }
+    .dashboard {
+      max-width: 1150px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+    .dashboard h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #28a745;
+      margin-bottom: 25px;
+    }
+    .table-container { overflow-x: auto; margin-top: 20px; }
+    .product-table {
+      width: 100%; border-collapse: collapse; border-spacing: 0; font-size: 14px;
+    }
+    .product-table th, .product-table td {
+      padding: 12px 15px; text-align: left; vertical-align: middle; border-bottom: 1px solid #dee2e6;
+    }
+    .product-table thead th {
+      background-color: #f8f9fa; font-weight: 600; color: #495057; border-bottom-width: 2px; white-space: nowrap;
+    }
+    .product-table tbody tr:hover { background-color: #f1f3f5; }
+    .product-table td img {
+      max-width: 60px; height: 60px; object-fit: cover; border-radius: 6px; display: block; background-color: #eee;
+    }
+    .product-table .actions { white-space: nowrap; }
+    .product-table .actions button {
+      padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px;
+      font-weight: 600; margin-right: 6px; color: white; transition: opacity 0.3s ease;
+    }
+    .product-table .actions .edit { background-color: #ffc107; color: #333; }
+    .product-table .actions .delete { background-color: #dc3545; }
+    .product-table .actions .view-reviews { background-color: #28a745; }
+
+    .rating-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #fff8e1; color: #f57f17; border: 1px solid #ffe082;
+      padding: 3px 8px; border-radius: 12px; font-weight: 600; font-size: 12px;
+    }
+
+    /* Reviews Modal */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.5); z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .reviews-card {
+      background: white; border-radius: 16px; padding: 25px 30px;
+      width: 90%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .reviews-card h3 { color: #28a745; font-size: 20px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    .review-item { padding: 12px 0; border-bottom: 1px dashed #eee; }
+    .review-item:last-child { border-bottom: none; }
+
+    .toast {
+      visibility: hidden; min-width: 250px; background-color: #3c83e6; color: white;
+      text-align: center; border-radius: 6px; padding: 12px; position: fixed;
+      z-index: 10000; left: 50%; bottom: 30px; transform: translateX(-50%); font-weight: bold; font-size: 16px;
+    }
+    .toast.show { visibility: visible; }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <a href="/farmer/dashboard" class="brand-logo-link"><h1>FarmFresh</h1></a>
+    <div>
+      <a href="/farmer/dashboard">Dashboard</a>
+      <a href="/addproduct">Add Product</a>
+      <a href="/farmer/orders">Orders</a>
+      <a href="/farmer/myproducts">My Products</a>
+      <a href="/profile">Profile</a>
+    </div>
+  </div>
+
+  <div class="dashboard">
+    <h2>Your Products</h2>
+    <div class="table-container">
+        <table class="product-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Rating</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="productList">
+              <tr><td colspan="6" style="text-align: center; padding: 20px; color: #6c757d;">Loading products...</td></tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+
+  <!-- Reviews View Modal -->
+  <div id="reviewsModal" class="modal-overlay">
+    <div class="reviews-card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 id="modalProductName" style="margin:0;">Product Reviews</h3>
+        <span onclick="closeReviewsModal()" style="font-size:22px; cursor:pointer; color:#888;">&times;</span>
+      </div>
+      <div id="modalReviewsList" style="margin-top:15px; max-height:350px; overflow-y:auto;">
+        <p style="color:#888;">Loading reviews...</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">Action completed successfully</div>
+
+  <script>
+    const token = document.cookie.match(/(^| )token=([^;]+)/)?.[2];
+    if (!token) {
+      alert("Access denied. Please log in as a farmer.");
+      window.location.href = "/login";
+    }
+
+    function logout() {
+      document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      window.location.href = "/login";
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.className = "toast show";
+      setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+    }
+
+    async function loadProducts() {
+      const list = document.getElementById("productList");
+      list.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 20px; color: #6c757d;">Loading products...</td></tr>`;
+
+      try {
+        const res = await fetch("/api/products/byfarmer", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token })
+        });
+
+        const data = await res.json();
+        list.innerHTML = "";
+
+        if (data.status === "success") {
+          const products = data.data || [];
+          if (products.length === 0) {
+            list.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 20px; color: #6c757d;">You haven't added any products yet. <a href="/addproduct" style="color: #28a745; font-weight: bold;">Add one now!</a></td></tr>`;
+          } else {
+            products.forEach(product => {
+              let imgSrc = product.image_url;
+              if (!imgSrc.startsWith('http') && !imgSrc.startsWith('/')) imgSrc = '/' + imgSrc;
+
+              const ratingBadge = (product.review_count > 0)
+                ? `<span class="rating-badge"><i class="fas fa-star"></i> ${product.avg_rating} (${product.review_count})</span>`
+                : `<span style="color:#aaa; font-size:12px;">New (0)</span>`;
+
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td><img src="${imgSrc}" alt="${product.name}" onerror="this.src='https://images.unsplash.com/photo-1540420773420-3366772f4999?w=100&auto=format&fit=crop';" /></td>
+                <td><strong>${product.name || 'N/A'}</strong></td>
+                <td>${ratingBadge}</td>
+                <td>₹${parseFloat(product.price).toFixed(2)}</td>
+                <td>${product.quantity} kg</td>
+                <td class="actions">
+                  <button class="view-reviews" onclick="openReviewsModal(${product.id}, '${product.name}')"><i class="fas fa-comments"></i> Reviews</button>
+                  <button class="edit" onclick="editProduct(${product.id})">Edit</button>
+                  <button class="delete" onclick="deleteProduct(${product.id})">Delete</button>
+                </td>`;
+              list.appendChild(row);
+            });
+          }
+        } else {
+          list.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 20px; color: #dc3545;">Error loading products: ${data.message || 'Unknown API error'}</td></tr>`;
+        }
+      } catch (err) {
+        list.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 20px; color: #dc3545;">Could not fetch products.</td></tr>`;
+      }
+    }
+
+    async function openReviewsModal(productId, productName) {
+      document.getElementById("modalProductName").textContent = `${productName} — Customer Reviews`;
+      const modal = document.getElementById("reviewsModal");
+      const list = document.getElementById("modalReviewsList");
+      list.innerHTML = "<p style='color:#777;'>Loading reviews...</p>";
+      modal.classList.add("active");
+
+      try {
+        const res = await fetch("/api/reviews/get", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ product_id: productId })
+        });
+        const data = await res.json();
+        const textReviews = (data.status === "success" && data.reviews) ? data.reviews.filter(r => r.review && r.review.trim() !== '') : [];
+
+        if (textReviews.length > 0) {
+          list.innerHTML = textReviews.map(r => `
+            <div class="review-item">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <span style="font-weight:600; color:#333;">${r.reviewer_name || 'Customer'}</span>
+                <span style="color:#ffc107;">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+              </div>
+              <p style="font-size:13px; color:#555;">${r.review}</p>
+            </div>
+          `).join('');
+        } else {
+          list.innerHTML = "<p style='color: #888; text-align: center; padding: 15px 0;'>No written reviews for this product yet.</p>";
+        }
+      } catch {
+        list.innerHTML = "<p style='color: red;'>Failed to load reviews.</p>";
+      }
+    }
+
+    function closeReviewsModal() {
+      document.getElementById("reviewsModal").classList.remove("active");
+    }
+
+    async function deleteProduct(productId) {
+      if (!confirm("Are you sure you want to delete this product?")) return;
+
+      try {
+        const res = await fetch("/api/products/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token, product_id: productId })
+        });
+
+        const data = await res.json();
+        if (data.status === "success") {
+          showToast("Product deleted successfully.");
+          loadProducts();
+        } else {
+          alert(`Failed to delete product: ${data.message || 'Error'}`);
+        }
+      } catch (err) {
+        alert("An error occurred while deleting.");
+      }
+    }
+
+    function editProduct(id) {
+      window.location.href = `/farmer/editproduct/${id}`;
+    }
+
+    if (token) {
+      loadProducts();
+    }
+  </script>
+</body>
+</html>
