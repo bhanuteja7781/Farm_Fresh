@@ -8,8 +8,10 @@
 farmfresh.pem
 
 # Dependencies
-/vendor/
-/node_modules/
+node_modules/
+frontend/node_modules/
+vendor/
+backend/vendor/
 
 # OS Generated Files
 .DS_Store
